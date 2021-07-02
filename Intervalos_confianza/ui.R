@@ -10,9 +10,14 @@ shinyUI(fluidPage(
     
     
     navbarPage("App shiny",
-             wellPanel(uiOutput("widget")
                
-    ))
+               wellPanel(
+                   
+                   uiOutput("widget") 
+                   
+               )
+
+    )
     
    
 

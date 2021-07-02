@@ -1,6 +1,8 @@
 
 library(shiny)
-data <- read.table("www/Ejercicio6.txt", sep=",", header = TRUE)
+
+
+data <- read.csv("www/Ejercicio6.txt", header = TRUE, encoding = "UTF-8")
 
 shinyServer(function(input, output) {
     
