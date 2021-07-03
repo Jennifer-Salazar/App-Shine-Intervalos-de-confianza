@@ -13,7 +13,17 @@ shinyUI(fluidPage(
                
                wellPanel(
                    
-                   uiOutput("widget") 
+                   uiOutput("widget"),
+                   
+                   actionButton("Normalidad", "Realizar prueba de normalidad"),
+                   
+                   plotOutput("qqplot"),
+                   
+                   verbatimTextOutput("Shapiro"),
+                   
+                   actionButton("IC", "Realizar intervalos de confianza para la media")
+                   
+                   
                    
                )
 

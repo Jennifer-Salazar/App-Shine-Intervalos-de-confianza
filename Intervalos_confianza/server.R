@@ -10,7 +10,27 @@ shinyServer(function(input, output) {
         selectInput("etiquetas", "Seleccione la variable de interes",
                     choices=colnames(data))
         
+        
+        
     })
+    
+    observeEvent(input$Normalidad, {
+        
+        variable <- data[,input$etiquetas]
+        
+        output$qqplot <- renderPlot({
+            qqnorm(variable, pch=19)
+            qqline(variable)
+            grid()
+            
+        })
+        
+        output$Shapiro <- renderPrint({
+            shapiro.test(variable)
+
+        })
+    })
+    
 
 
 })
