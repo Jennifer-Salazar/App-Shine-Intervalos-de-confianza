@@ -1,13 +1,60 @@
-
-
+# Librerias
 library(shiny)
 
-# Define UI for application that draws a histogram
-shinyUI(fluidPage(
 
-    h1(strong("App para Intervalos de Confianza"), align= "center",
-       style="color: purple;font-family: cursive"), hr(),
+# UI ----------------------------------------------------------------------
+
+shinyUI(fluidPage(
     
+
+    # Título ------------------------------------------------------------------
+
+    tags$div(class="jumbotron",
+             
+        h1(strong("App para Intervalos de Confianza"), align= "center",
+           style="color: purple;font-family: cursive"),
+    ),
+    
+    
+
+    # Mostrar base de datos e información general -----------------------------
+    
+    hr(),
+    
+    fluidRow(
+        
+        column(width = 11,
+               
+               dataTableOutput(outputId = "print_datos"),
+        ),
+        
+        column(width = 1,
+               
+               verticalLayout(
+                   
+                   
+                   # Numero de filas
+                   wellPanel("Número de columnas",
+                             
+                             textOutput(outputId = "num_filas")
+                   ),
+                   
+                   wellPanel("Número de columnas", 
+                             
+                             textOutput(outputId = "num_columnas")
+                             
+                   )
+                   
+               ),
+               
+        )
+        
+    ),
+    
+    hr(),
+    
+
+    # Panel lateral -----------------------------------------------------------    
     
     navbarPage("App shiny",
                
@@ -20,8 +67,6 @@ shinyUI(fluidPage(
                    plotOutput("qqplot"),
                    
                    verbatimTextOutput("Shapiro"),
-                   
-                   actionButton("IC", "Realizar intervalos de confianza para la media")
                    
                    
                    
