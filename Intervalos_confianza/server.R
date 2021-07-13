@@ -40,7 +40,7 @@ shinyServer(function(input, output) {
     # Selección de las variables ----------------------------------------------
     
     output$widget <- renderUI({
-        selectInput("etiquetas", "Seleccione la variable de interes",
+        selectInput(inputId = "etiquetas", "",
                     choices=colnames(data)) 
         
     })
