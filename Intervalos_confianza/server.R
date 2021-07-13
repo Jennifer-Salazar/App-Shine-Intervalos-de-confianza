@@ -13,7 +13,7 @@ shinyServer(function(input, output) {
 
     # Mostrar base de datos e información -------------------------------------
 
-
+    # Se imprime la base de datos
     output$print_datos <- renderDataTable(
 
         DT::datatable({data},
@@ -24,14 +24,16 @@ shinyServer(function(input, output) {
         style = "bootstrap")
     )
     
-    output$num_filas <- renderText({
+    # Se imprime el número de filas
+    output$num_row <- renderText({
         
-        paste(dim(data)[1])
+        dim(data)[1]
     })
     
-    output$num_columnas <- renderText({
+    # Se imprime el número de columnas
+    output$num_column <- renderText({
         
-        paste(dim(data)[2])
+        dim(data)[2]
     })
     
 

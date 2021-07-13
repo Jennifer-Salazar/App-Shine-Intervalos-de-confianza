@@ -21,27 +21,35 @@ shinyUI(fluidPage(
     
     hr(),
     
+    # Se divide la página horizontalmente
     fluidRow(
         
+        # lado izquierdo
         column(width = 11,
                
+               # Mostrar base de datos
                dataTableOutput(outputId = "print_datos"),
         ),
         
+        # lado derecho
         column(width = 1,
                
+               # Se divide la página verticalmente
                verticalLayout(
                    
                    
-                   # Numero de filas
-                   wellPanel("Número de columnas",
+                   # Mostrar número de filas
+                   wellPanel("Número de filas",
                              
-                             textOutput(outputId = "num_filas")
+                             h2(textOutput(outputId = "num_row"))
+                             
                    ),
+
                    
+                   # Mostrar número de columnas
                    wellPanel("Número de columnas", 
                              
-                             textOutput(outputId = "num_columnas")
+                             h2(textOutput(outputId = "num_column"))
                              
                    )
                    
