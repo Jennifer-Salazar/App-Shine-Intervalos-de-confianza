@@ -13,58 +13,12 @@ shinyUI(fluidPage(
              
              h1(strong("App para Intervalos de Confianza"), align= "center",
                 style="color: purple;font-family: cursive"),
-    ),
-    
-    
-    
-    # Mostrar base de datos e información general -----------------------------
-    
-    hr(),
-    
-    # Se divide la página horizontalmente
-    fluidRow(
-        
-        # lado izquierdo
-        column(width = 9,
-               
-               # Mostrar base de datos
-               dataTableOutput(outputId = "print_datos"),
-        ),
-        
-        # lado derecho
-        column(width = 3,
-               
-               # Se divide la página verticalmente
-               verticalLayout(
-                   
-                   
-                   # Mostrar número de filas
-                   wellPanel("Número de filas",
-                             
-                             h2(textOutput(outputId = "num_row"))
-                             
-                   ),
-                   
-                   
-                   # Mostrar número de columnas
-                   wellPanel("Número de columnas", 
-                             
-                             h2(textOutput(outputId = "num_column"))
-                             
-                   )
-                   
-               ),
-               
-        )
-        
-    ),
-    
+    ),    
 
     # Selección de la variable de interes -------------------------------------
     
 
     hr(),
-    
     
     fluidRow(
 
@@ -76,7 +30,6 @@ shinyUI(fluidPage(
                
         )
     ),
-
     
     hr(),
     
@@ -85,7 +38,52 @@ shinyUI(fluidPage(
     
     navlistPanel("App shiny",
                  
-                 # Panel para verificar normalidad
+                 # Mostrar base de datos e información general -----------------------------
+                 
+                 tabPanel("Inicio",
+                          
+                          # Se divide la página horizontalmente
+                          fluidRow(
+                              
+                              # lado izquierdo
+                              column(width = 9,
+                                     
+                                     # Mostrar base de datos
+                                     dataTableOutput(outputId = "print_datos"),
+                              ),
+                              
+                              # lado derecho
+                              column(width = 3,
+                                     
+                                     # Se divide la página verticalmente
+                                     verticalLayout(
+                                         
+                                         
+                                         # Mostrar número de filas
+                                         wellPanel("Número de filas",
+                                                   
+                                                   h2(textOutput(outputId = "num_row"))
+                                                   
+                                         ),
+                                         
+                                         
+                                         # Mostrar número de columnas
+                                         wellPanel("Número de columnas", 
+                                                   
+                                                   h2(textOutput(outputId = "num_column"))
+                                                   
+                                         )
+                                         
+                                     ),
+                                     
+                              )
+                              
+                          )        
+                 ),
+                 
+
+                 # Verificar normalidad ----------------------------------------------------
+
                  tabPanel("Prueba de normalidad",
                           
                           wellPanel(
@@ -98,28 +96,73 @@ shinyUI(fluidPage(
                           )      
                  ),
                  
-                 # Panel para mostrar los intervalos de confianza
+
+                 # Calcular intervalos de confianza ----------------------------------------
+                 
                  tabPanel("Intervalos de confianza",
                           
+
+                          # Selección del párametro de interes --------------------------------------
                           
-                          actionButton(inputId = "mu", "\u03BC"),
-                          actionButton(inputId = "sigma", "σ²"),
+                          selectInput(inputId = "parametro",
+                                      label = "",  
+                                      choice = c("\u03BC",
+                                                 "\u03C3²")
+                          ),
+
                           
-                          conditionalPanel(condition = "input.mu == 1",
+
+                          # mu seleccinado ----------------------------------------------------------
+                          
+                          conditionalPanel(condition = "input.parametro == '\u03BC'",
                                            
-                                           h1("hola")
+                                           # Escoger entre simga cuadrado conocida o desconocida
+                                           actionButton(inputId = "var_conocida", "\u03C3² conocida"),
+                                           actionButton(inputId = "var_desconocida", "\u03C3² desconocida"),
+                                           
+                                           # Selectinput para varianza conocida
+                                           conditionalPanel(condition = "input.var_conocida%2 == 1",
+                                                            
+                                                            numericInput(inputId = "var_Poblacional",
+                                                                         
+                                                                         label = "",
+                                                                         value = NULL,
+                                                                         min = 0,
+                                                                         max = 99999999999999999         
+                                                            )
+                                                            
+                                           )
                                            
                           ),
                           
-                          conditionalPanel(condition = "input.sigma == 1",
+
+                          # Varianza seleccionada ---------------------------------------------------
+
+                          conditionalPanel(condition = "input.parametro == '\u03C3²'",
                                            
-                                           h1("Como")
+                                           # Escoger entre mu conocida o desconocida
+                                           actionButton(inputId = "mu_conocida", "\u03BC conocida"),
+                                           actionButton(inputId = "mu_desconocida", "\u03BC desconocida"),
+                                           
+                                           # Selectinput para mu conocida
+                                           conditionalPanel(condition = "input.mu_conocida%2 == 1",
+                                                            
+                                                            numericInput(inputId = "var_Poblacional",
+                                                                         
+                                                                         label = "",
+                                                                         value = NULL,
+                                                                         min = -99999999999999999,
+                                                                         max = 99999999999999999         
+                                                            )
+                                                            
+                                           )
+                                           
                                            
                           ),
                           
                           
                           
-                     
+                          
                  )
                  
                  
