@@ -12,7 +12,7 @@ shinyUI(fluidPage(
     tags$div(class="jumbotron",
              
              h1(strong("App para Intervalos de Confianza"), align= "center",
-                style="color: purple;font-family: cursive"),
+                style="color: cyan3;font-family: cursive"),
     ),    
 
     # Selección de la variable de interes -------------------------------------
