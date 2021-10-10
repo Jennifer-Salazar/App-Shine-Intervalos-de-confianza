@@ -111,6 +111,8 @@ shinyUI(fluidPage(
                           ),
 
                           
+                          textOutput(outputId = "prueba"),
+                          
 
                           # mu seleccinado ----------------------------------------------------------
                           
@@ -121,7 +123,9 @@ shinyUI(fluidPage(
                                            actionButton(inputId = "var_desconocida", "\u03C3² desconocida"),
                                            
                                            # Selectinput para varianza conocida
-                                           conditionalPanel(condition = "input.var_conocida%2 == 1",
+                                           conditionalPanel(
+                                               
+                                               condition = "(input.var_conocida)%2 == 1",
                                                             
                                                             numericInput(inputId = "var_Poblacional",
                                                                          
@@ -145,7 +149,7 @@ shinyUI(fluidPage(
                                            actionButton(inputId = "mu_desconocida", "\u03BC desconocida"),
                                            
                                            # Selectinput para mu conocida
-                                           conditionalPanel(condition = "input.mu_conocida%2 == 1",
+                                           conditionalPanel(condition = "(input.mu_conocida)%2 == 1",
                                                             
                                                             numericInput(inputId = "var_Poblacional",
                                                                          

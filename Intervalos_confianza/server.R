@@ -65,6 +65,23 @@ shinyServer(function(input, output) {
         })
     })
     
+    
+
+    # Pruebas miguel -----------------------------------------------------------
+    
+    observeEvent(c(input$var_conocida, input$var_desconocida), {
+        
+        output$prueba <- renderText({
+            
+            #paste(input$var_conocida, input$var_desconocida)
+            
+            paste(input$var_conocida%%2, input$var_desconocida%%2)
+        })
+        
+    })
+
+    
+    
 
 
 })
