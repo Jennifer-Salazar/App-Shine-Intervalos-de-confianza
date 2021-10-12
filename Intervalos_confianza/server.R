@@ -11,17 +11,76 @@ data <- read.csv("www/Ejercicio6.txt", header = TRUE, encoding = "UTF-8")
 shinyServer(function(input, output) {
     
 
-    # Mostrar base de datos e información -------------------------------------
+    # Preguntar la variable a usar para el IC ---------------------------------
+    
+    observeEvent(input$parametro, {
+    
+        
+        if(input$parametro != ""){
+                
+            output$preguntar_variable <- renderUI({
+                
+                tagList(
+                    
+                    h4("Datos muestrales: "),
+                    
+                    selectInput(inputId = "nombre_variable", 
+                                label = "",
+                                choices= c("", colnames(data)) ) 
+                    
+                )
+                
+            })
+        
+        }
+        
+    })
 
+    # Preguntar si el otro parámetro es concido o desconocido -----------------
+
+    # observeEvent(c(input$parametro, input$nombre_variable), {
+    #     
+    #     # Identificar cual es el parámetro a preguntar si es conocido o no
+    #     
+    #     parametro_dos <- "\u03C3²"
+    #     
+    #     if(input$parametro == "\u03C3²"){
+    #         
+    #         parametro_dos <- "\u03BC"
+    #         
+    #     }
+    #     
+    #     
+    #     if(input$nombre_variable != ""){
+    #         
+    #         output$preguntar_conocido <- renderUI({
+    #             
+    #             tagList(
+    #                 
+    #                 actionButton(inputId = "param2_conocida", paste(parametro_dos, " conocida")),
+    #                 actionButton(inputId = "param2_desconocida", paste(parametro_dos, " desconocida"))
+    #                 
+    #             )
+    #         
+    #             
+    #         })
+    #     }
+    # 
+    # })
+    
+    
+    
+    # Mostrar base de datos e información -------------------------------------
+    
     # Se imprime la base de datos
     output$print_datos <- renderDataTable(
-
+        
         DT::datatable({data},
-        options = list(lengthMenu = list(c(5,10,-1),  c("5", "10", "All")),
-                       pageLength=5),
-        filter = "top",
-        selection = "multiple",
-        style = "bootstrap")
+                      options = list(lengthMenu = list(c(5,10,-1),  c("5", "10", "All")),
+                                     pageLength=5),
+                      filter = "top",
+                      selection = "multiple",
+                      style = "bootstrap")
     )
     
     # Se imprime el número de filas
@@ -34,15 +93,6 @@ shinyServer(function(input, output) {
     output$num_column <- renderText({
         
         dim(data)[2]
-    })
-    
-
-    # Selección de las variables ----------------------------------------------
-    
-    output$widget <- renderUI({
-        selectInput(inputId = "etiquetas", "",
-                    choices=colnames(data)) 
-        
     })
     
 
@@ -67,18 +117,29 @@ shinyServer(function(input, output) {
     
     
 
-    # Pruebas miguel -----------------------------------------------------------
+    # Calculo de intervalos de confianza --------------------------------------
     
-    observeEvent(c(input$var_conocida, input$var_desconocida), {
+    observeEvent(input$parametro, {
         
-        output$prueba <- renderText({
+
+        # Intervalos de confianza para la media -----------------------------------
+
+        if(input$parametro == "\u03BC"){
             
-            #paste(input$var_conocida, input$var_desconocida)
             
-            paste(input$var_conocida%%2, input$var_desconocida%%2)
-        })
+            
+        
+
+        # Invetervalos de confianza para la varianza ------------------------------
+            
+        }else if(input$parametro == "\u03C3²"){
+            
+            
+        }
+        
         
     })
+    
 
     
     

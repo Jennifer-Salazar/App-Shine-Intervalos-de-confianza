@@ -5,7 +5,7 @@ variable <- data$Precio
 
 varianza <- var(variable)
 
-alpha <-  0.01
+alpha <-  0.05
 
 
 
@@ -67,30 +67,39 @@ ic_media_conocida <- function(variable, varianza, alpha){
   
 }
 
-
+ 
 
 # IC para la media con varianza desconocida -------------------------------
 
-ic_media_conocida <- function(variable, varianza, alpha, normalidad){
+ic_media_desconocida <- function(variable, alpha, normalidad){
  
   x_barra <- mean(variable)
-  desv <- varianza^0.5
+  desv <- sd(variable)
   n <- length(variable)
   
+  metodo <- ""
+  
   if(normalidad == TRUE){
+    
+    metodo <- "Método del pivote"
     
     # Método del pivote -------------------------------------------------------
 
     pivote_li <- x_barra - qt(1 - alpha/2, n-1) *  desv/sqrt(n)
     pivote_ls <- x_barra + qt(1 - alpha/2, n-1) *  desv/sqrt(n)
+    
+    ic_pivote <- c(pivote_li, pivote_ls)
 
   }else if(n > 30){
+    
+    metodo <- "Aprox. Teorema del límite central"
     
     # TLC ---------------------------------------------------------------------
 
     tlc_li <- x_barra - qnorm(1 - alpha/2) *  desv/sqrt(n)
     tlc_ls <- x_barra + qnorm(1 - alpha/2) *  desv/sqrt(n)
     
+    ic_pivote <- c(tlc_li, tlc_ls)
   }
 
   # Boostrap ----------------------------------------------------------------
@@ -112,8 +121,25 @@ ic_media_conocida <- function(variable, varianza, alpha, normalidad){
 
   # return ------------------------------------------------------------------
 
-  
+  if(metodo == ""){
     
-
+    intervalos <- as.data.frame(ic_boostrap)
+    colnames(intervalos) <- "Boostrap BCA"
+    
+  }else{
+    
+    intervalos <- cbind(ic_pivote, ic_boostrap)
+    colnames(intervalos) <- c(metodo, "Boostrap BCA")
+  }
+  
+  row.names(intervalos) <- c("límite inferior", "límite superior")
+  
+  return(intervalos)
+    
 }
+
+
+
+
+
 

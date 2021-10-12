@@ -11,22 +11,130 @@ shinyUI(fluidPage(
     
     tags$div(class="jumbotron",
              
-             h1(strong("App para Intervalos de Confianza"), align= "center",
-                style="color: cyan3;font-family: cursive"),
-    ),    
+             h2(strong("Aplicación de"), align= "center",
+                style="color: black;font-family: cursive"),
+             
+             h2(strong("Intervalos de Confianza"), align= "center",
+                style="color: black;font-family: cursive"),
+    ),
 
-    # Selección de la variable de interes -------------------------------------
-    
 
     hr(),
     
+                    
     fluidRow(
-
         
-        column(width = 12, offset = 5,
+
+        # Selección del parámetro para el cual se desea el IC ---------------------
+        
+        column(width = 2, offset = 1,
                
-               h4("Seleccione la variable de interes"),
-               uiOutput("widget")
+               
+               h4("Parámetro a estimar:"),
+               
+               selectInput(inputId = "parametro",
+                           label = "",  
+                           choice = c(
+                               "",
+                               "\u03BC",   # media
+                               "\u03C3²"   # varianza
+                           )  
+               ),
+        ),
+        
+        
+        # Selección de la variable de interes -------------------------------------
+        
+        column(width = 2, offset = 0,
+               
+               uiOutput(outputId = "preguntar_variable")
+        ),
+        
+
+        # El párametro restante es conocido o desconocido -------------------------
+        
+        # column(width = 2, offset = 0,
+        #        
+        #        uiOutput(outputId = "preguntar_conocido")
+        # ),
+        
+        
+        # column(width = 2, offset = 0,
+        # 
+        #        # Si el IC es para la media
+        #        
+        #        conditionalPanel(condition = " input.nombre_variable != '' & input.parametro == '\u03BC' ",
+        #                         
+        #                         
+        #                         # Escoger entre simga cuadrado conocida o desconocida
+        #                         actionButton(inputId = "var_conocida", "\u03C3² conocida"),
+        #                         actionButton(inputId = "var_desconocida", "\u03C3² desconocida"),
+        #                         
+        #                         # Selectinput para varianza conocida
+        #                         conditionalPanel(
+        #                             
+        #                             condition = "(input.var_conocida)%2 >= 0 &
+        #                                          (input.var_conocida) > (input.var_desconocida)",
+        #                             
+        #                             numericInput(inputId = "var_Poblacional",
+        #                                          label = "",
+        #                                          value = NULL,
+        #                                          min = 0,
+        #                                          max = 99999999999999999         
+        #                             ) 
+        #                         )
+        #                         
+        #                         
+        #                         
+        #        ),
+        #        
+        #        # Si el IC es para la varianza 
+        #        
+        #        
+        #        conditionalPanel(condition = " input.nombre_variable != '' & input.parametro == '\u03C3²' ",
+        #                         
+        #                         
+        #                         br(),
+        #                         
+        #                         # Escoger entre mu conocida o desconocida
+        #                         
+        #                         actionButton(inputId = "mu_conocida", "\u03BC conocida"),
+        #                         actionButton(inputId = "mu_desconocida", "\u03BC desconocida"),
+        #                         
+        #                         # Selectinput para mu conocida
+        #                         conditionalPanel(condition = "(input.mu_conocida)%2 >= 0 &
+        #                                          (input.mu_conocida) > (input.mu_desconocida)",
+        #                                          
+        #                                          numericInput(inputId = "media_Poblacional",
+        #                                                       label = "",
+        #                                                       value = NULL,
+        #                                                       min = -99999,
+        #                                                       max = 99999         
+        #                                          )                
+        #                         )
+        #        )
+        # 
+        # ),
+        
+
+        # Nivel de significancia --------------------------------------------------
+        
+        column(width = 2, offset = 0,
+               
+               conditionalPanel(condition = "input.media_Poblacional != undefined",
+                   
+                   h4("Nivel de significancia: "),
+                   
+                   numericInput(inputId = "alpha",
+                                
+                                label = "",
+                                value = NULL,
+                                min = 0,
+                                max = 0.2         
+                   ) 
+               )
+               
+
                
         )
     ),
@@ -36,11 +144,11 @@ shinyUI(fluidPage(
     
     # Panel lateral -----------------------------------------------------------    
     
-    navlistPanel("App shiny",
+    navlistPanel("App shiny", widths = c(2, 10),
                  
                  # Mostrar base de datos e información general -----------------------------
                  
-                 tabPanel("Inicio",
+                 tabPanel("Inicio",  icon = icon("table"),
                           
                           # Se divide la página horizontalmente
                           fluidRow(
@@ -84,7 +192,7 @@ shinyUI(fluidPage(
 
                  # Verificar normalidad ----------------------------------------------------
 
-                 tabPanel("Prueba de normalidad",
+                 tabPanel("Prueba de normalidad", icon = icon("chart-bar"),
                           
                           wellPanel(
                               
@@ -99,70 +207,7 @@ shinyUI(fluidPage(
 
                  # Calcular intervalos de confianza ----------------------------------------
                  
-                 tabPanel("Intervalos de confianza",
-                          
-
-                          # Selección del párametro de interes --------------------------------------
-                          
-                          selectInput(inputId = "parametro",
-                                      label = "",  
-                                      choice = c("\u03BC",
-                                                 "\u03C3²")
-                          ),
-
-                          
-                          textOutput(outputId = "prueba"),
-                          
-
-                          # mu seleccinado ----------------------------------------------------------
-                          
-                          conditionalPanel(condition = "input.parametro == '\u03BC'",
-                                           
-                                           # Escoger entre simga cuadrado conocida o desconocida
-                                           actionButton(inputId = "var_conocida", "\u03C3² conocida"),
-                                           actionButton(inputId = "var_desconocida", "\u03C3² desconocida"),
-                                           
-                                           # Selectinput para varianza conocida
-                                           conditionalPanel(
-                                               
-                                               condition = "(input.var_conocida)%2 == 1",
-                                                            
-                                                            numericInput(inputId = "var_Poblacional",
-                                                                         
-                                                                         label = "",
-                                                                         value = NULL,
-                                                                         min = 0,
-                                                                         max = 99999999999999999         
-                                                            )
-                                                            
-                                           )
-                                           
-                          ),
-                          
-
-                          # Varianza seleccionada ---------------------------------------------------
-
-                          conditionalPanel(condition = "input.parametro == '\u03C3²'",
-                                           
-                                           # Escoger entre mu conocida o desconocida
-                                           actionButton(inputId = "mu_conocida", "\u03BC conocida"),
-                                           actionButton(inputId = "mu_desconocida", "\u03BC desconocida"),
-                                           
-                                           # Selectinput para mu conocida
-                                           conditionalPanel(condition = "(input.mu_conocida)%2 == 1",
-                                                            
-                                                            numericInput(inputId = "var_Poblacional",
-                                                                         
-                                                                         label = "",
-                                                                         value = NULL,
-                                                                         min = -99999999999999999,
-                                                                         max = 99999999999999999         
-                                                            )
-                                                            
-                                           )
-                                           
-                                           
-                          ),
+                 tabPanel("Intervalos de confianza", icon = icon("calculator"),
                           
                           
                           
