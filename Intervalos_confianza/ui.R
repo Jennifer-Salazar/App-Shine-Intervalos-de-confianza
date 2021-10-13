@@ -27,7 +27,7 @@ shinyUI(fluidPage(
 
         # Selección del parámetro para el cual se desea el IC ---------------------
         
-        column(width = 2, offset = 1,
+        column(width = 3, offset = 1,
                
                
                h4("Parámetro a estimar:"),
@@ -45,7 +45,7 @@ shinyUI(fluidPage(
         
         # Selección de la variable de interes -------------------------------------
         
-        column(width = 2, offset = 0,
+        column(width = 3, offset = 0,
                
                uiOutput(outputId = "preguntar_variable")
         ),
@@ -53,89 +53,11 @@ shinyUI(fluidPage(
 
         # El párametro restante es conocido o desconocido -------------------------
         
-        # column(width = 2, offset = 0,
-        #        
-        #        uiOutput(outputId = "preguntar_conocido")
-        # ),
-        
-        
-        # column(width = 2, offset = 0,
-        # 
-        #        # Si el IC es para la media
-        #        
-        #        conditionalPanel(condition = " input.nombre_variable != '' & input.parametro == '\u03BC' ",
-        #                         
-        #                         
-        #                         # Escoger entre simga cuadrado conocida o desconocida
-        #                         actionButton(inputId = "var_conocida", "\u03C3² conocida"),
-        #                         actionButton(inputId = "var_desconocida", "\u03C3² desconocida"),
-        #                         
-        #                         # Selectinput para varianza conocida
-        #                         conditionalPanel(
-        #                             
-        #                             condition = "(input.var_conocida)%2 >= 0 &
-        #                                          (input.var_conocida) > (input.var_desconocida)",
-        #                             
-        #                             numericInput(inputId = "var_Poblacional",
-        #                                          label = "",
-        #                                          value = NULL,
-        #                                          min = 0,
-        #                                          max = 99999999999999999         
-        #                             ) 
-        #                         )
-        #                         
-        #                         
-        #                         
-        #        ),
-        #        
-        #        # Si el IC es para la varianza 
-        #        
-        #        
-        #        conditionalPanel(condition = " input.nombre_variable != '' & input.parametro == '\u03C3²' ",
-        #                         
-        #                         
-        #                         br(),
-        #                         
-        #                         # Escoger entre mu conocida o desconocida
-        #                         
-        #                         actionButton(inputId = "mu_conocida", "\u03BC conocida"),
-        #                         actionButton(inputId = "mu_desconocida", "\u03BC desconocida"),
-        #                         
-        #                         # Selectinput para mu conocida
-        #                         conditionalPanel(condition = "(input.mu_conocida)%2 >= 0 &
-        #                                          (input.mu_conocida) > (input.mu_desconocida)",
-        #                                          
-        #                                          numericInput(inputId = "media_Poblacional",
-        #                                                       label = "",
-        #                                                       value = NULL,
-        #                                                       min = -99999,
-        #                                                       max = 99999         
-        #                                          )                
-        #                         )
-        #        )
-        # 
-        # ),
-        
+        column(width = 4, offset = 0,
 
-        # Nivel de significancia --------------------------------------------------
-        
-        column(width = 2, offset = 0,
+               uiOutput(outputId = "preguntar_parametro2"),
                
-               conditionalPanel(condition = "input.media_Poblacional != undefined",
-                   
-                   h4("Nivel de significancia: "),
-                   
-                   numericInput(inputId = "alpha",
-                                
-                                label = "",
-                                value = NULL,
-                                min = 0,
-                                max = 0.2         
-                   ) 
-               )
-               
-
-               
+               uiOutput(outputId = "preguntar_conocido")
         )
     ),
     
@@ -210,7 +132,22 @@ shinyUI(fluidPage(
                  tabPanel("Intervalos de confianza", icon = icon("calculator"),
                           
                           
+                          h4("Ingrese el nivel de confianza (%): "),
                           
+                          fluidRow(
+                          
+                              column(width = 1,
+                                     
+                                     numericInput(inputId = "nivel_de_confianza", label = "", 
+                                                  value = 95, min = 0, max = 100),
+                                     
+                                     actionButton(inputId = "calcular_ic", label = "calcular IC", icon = icon("calculator"))
+                              )
+                          ),
+                          
+                          uiOutput("IC")
+                          
+
                           
                  )
                  

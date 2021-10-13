@@ -11,7 +11,7 @@ data <- read.csv("www/Ejercicio6.txt", header = TRUE, encoding = "UTF-8")
 shinyServer(function(input, output) {
     
 
-    # Preguntar la variable a usar para el IC ---------------------------------
+    # Mostrar cuestionario para la variable a usar en el IC -------------------
     
     observeEvent(input$parametro, {
     
@@ -22,7 +22,7 @@ shinyServer(function(input, output) {
                 
                 tagList(
                     
-                    h4("Datos muestrales: "),
+                    h4("Variable de interés: "),
                     
                     selectInput(inputId = "nombre_variable", 
                                 label = "",
@@ -31,44 +31,78 @@ shinyServer(function(input, output) {
                 )
                 
             })
-        
+            
+            
+            # Preguntar si el otro parámetro es concido o desconocido -----------------
+            
+            # Identificar cual es el parámetro a preguntar si es conocido o no
+            
+            if(input$parametro == "\u03C3²"){
+                
+                parametro_dos <- "\u03BC"
+                
+            }else{
+                parametro_dos <- "\u03C3²"
+            }
+            
+            # vector para mostrarle al usuario las opciones
+            
+            opciones <- paste(parametro_dos, c("conocido", "desconocido"))
+            
+            
+            observeEvent(input$nombre_variable, {
+                
+                # Mostrar las opciones de conocido y desconocido
+                
+                if(input$nombre_variable != ""){
+                    
+                    output$preguntar_parametro2 <- renderUI({
+                        
+                        tagList(
+                            h4("Seleccionar: "),
+                            
+                            radioButtons(inputId = "parametro2_conocido",
+                                         label = "", choices = opciones)
+                        )
+                        
+                        
+                    })
+                    
+                }
+                
+            })
+            
+            # Desplegar numeric input si el parámetro2 es conocido --------------------
+            
+            observeEvent(input$parametro2_conocido, {
+                
+                if(input$parametro2_conocido == opciones[1]){
+                    
+                    output$preguntar_conocido <- renderUI({
+                        
+                        numericInput(
+                            inputId = "conocido",
+                            label = "",
+                            value = NULL,
+                            min = 0,
+                            max = 999999
+                        )
+                        
+                    })
+                    
+                }else{
+                    
+                    output$preguntar_conocido <- renderUI({
+                        
+                    })
+                }
+                
+                
+            })
         }
         
     })
 
-    # Preguntar si el otro parámetro es concido o desconocido -----------------
-
-    # observeEvent(c(input$parametro, input$nombre_variable), {
-    #     
-    #     # Identificar cual es el parámetro a preguntar si es conocido o no
-    #     
-    #     parametro_dos <- "\u03C3²"
-    #     
-    #     if(input$parametro == "\u03C3²"){
-    #         
-    #         parametro_dos <- "\u03BC"
-    #         
-    #     }
-    #     
-    #     
-    #     if(input$nombre_variable != ""){
-    #         
-    #         output$preguntar_conocido <- renderUI({
-    #             
-    #             tagList(
-    #                 
-    #                 actionButton(inputId = "param2_conocida", paste(parametro_dos, " conocida")),
-    #                 actionButton(inputId = "param2_desconocida", paste(parametro_dos, " desconocida"))
-    #                 
-    #             )
-    #         
-    #             
-    #         })
-    #     }
-    # 
-    # })
-    
-    
     
     # Mostrar base de datos e información -------------------------------------
     
@@ -100,7 +134,7 @@ shinyServer(function(input, output) {
     
     observeEvent(input$Normalidad, {
         
-        variable <- data[,input$etiquetas]
+        variable <- data[,input$nombre_variable]
         
         output$qqplot <- renderPlot({
             qqnorm(variable, pch=19)
@@ -119,17 +153,26 @@ shinyServer(function(input, output) {
 
     # Calculo de intervalos de confianza --------------------------------------
     
-    observeEvent(input$parametro, {
+    observeEvent(input$calcular_ic, {
         
+        source("IC_functions3.R")
+        
+        variable <- data[,input$nombre_variable]
 
         # Intervalos de confianza para la media -----------------------------------
-
+        
         if(input$parametro == "\u03BC"){
             
+            x_barra <- mean(variable)
+            
+            #if(conco)
+            
+            #desv, n, alpha, conocida, normalidad
             
             
-        
-
+            
+            
+            
         # Invetervalos de confianza para la varianza ------------------------------
             
         }else if(input$parametro == "\u03C3²"){
@@ -137,8 +180,10 @@ shinyServer(function(input, output) {
             
         }
         
-        
     })
+        
+        
+
     
 
     
