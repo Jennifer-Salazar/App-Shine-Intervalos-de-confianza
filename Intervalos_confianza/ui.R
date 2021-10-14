@@ -120,7 +120,18 @@ shinyUI(fluidPage(
                               
                               actionButton("Normalidad", "Realizar prueba de normalidad"),
                               
-                              plotOutput("qqplot"),
+                              fluidRow(
+                                  column(width = 6,
+                                         plotOutput("qqplot")
+                                  ),
+                                  column(width = 6,
+                                         plotOutput("histograma")
+                                  )
+                              ),
+                              
+                              # plotOutput("qqplot"),
+
+                              # plotOutput("histograma"),
                               
                               verbatimTextOutput("Shapiro")   
                           )      
@@ -142,13 +153,23 @@ shinyUI(fluidPage(
                                                   value = 95, min = 0, max = 100),
                                      
                                      actionButton(inputId = "calcular_ic", label = "calcular IC", icon = icon("calculator"))
+                              ),
+                              
+                              column(width = 8, offset = 3,
+                                     
+                                     tableOutput("IC")
+                                  
                               )
                           ),
                           
-                          uiOutput("IC")
-                          
-
-                          
+                          fluidRow(
+                              
+                              column(width = 8, offset = 4,
+                                     
+                                     uiOutput("parametros_estimados")
+                                     
+                              )
+                          )                          
                  )
                  
                  

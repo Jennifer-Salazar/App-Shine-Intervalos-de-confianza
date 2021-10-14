@@ -143,6 +143,13 @@ shinyServer(function(input, output) {
             
         })
         
+        output$histograma <- renderPlot({
+            hist(variable, col = "cyan4")
+            grid()
+
+        })
+        
+        
         output$Shapiro <- renderPrint({
             shapiro.test(variable)
 
@@ -165,12 +172,60 @@ shinyServer(function(input, output) {
             
             x_barra <- mean(variable)
             
-            #if(conco)
+            n <- length(variable)
             
-            #desv, n, alpha, conocida, normalidad
+            alpha <- 1 - input$nivel_de_confianza * 0.01
+            
+            # Normalidad
+            p_val_normalidad <- shapiro.test(variable)$p.value
+            
+            normalidad <- ifelse(p_val_normalidad > 0.1, T, F)
             
             
+            # Varianza o no conocida
             
+            if( strsplit( input$parametro2_conocido, " ")[[1]][2] == "conocido"){
+                conocida <- TRUE
+                desv <- (input$conocido)^0.5
+            }else{
+                conocida <- FALSE
+                desv <- sd(variable)
+            }
+            
+            # Calculo de los intervalos de confianza
+            
+            ic_pivote <- ic_pivote_media(x_barra, desv, n, alpha, conocida, normalidad)
+            
+            ic_mv <- ic_mv_media(x_barra, desv, n, alpha)
+            
+            ic_boostrap <- ic_boostrap_media(variable, alpha)
+            
+            
+            # Mostrar los intervalos como un dataframe
+            
+            metodos <- c("Método del pivote", "Máxima verosimilitud", "Boostrap BCA")
+            
+            intervalos <- cbind(ic_pivote, ic_mv, ic_boostrap)
+            colnames(intervalos) <- metodos
+            row.names(intervalos) <- c("límite inferior", "límite superior")
+            
+            output$IC <- renderTable({
+                
+                intervalos
+                
+            }, include.rownames=TRUE)
+            
+            
+            output$parametros_estimados <- renderUI({
+                
+                tagList(
+                    
+                    h5(paste("Estimación puntual media: ", x_barra)),
+                    
+                    h5(paste("Estimación puntual varianza: ", round(desv^2, 3)))
+                
+                )
+            })
             
             
         # Invetervalos de confianza para la varianza ------------------------------
