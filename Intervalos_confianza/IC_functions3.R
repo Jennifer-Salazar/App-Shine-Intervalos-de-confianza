@@ -9,7 +9,7 @@ conocida <- TRUE
 
 ic_pivote_media <- function(x_barra, desv, n, alpha, conocida, normalidad){
   
-  if(normalidad & !concida){
+  if(normalidad & !conocida){
     
     pivote_li <- x_barra - qt(1 - alpha/2, n-1) *  desv/sqrt(n)
     pivote_ls <- x_barra + qt(1 - alpha/2, n-1) *  desv/sqrt(n)
@@ -53,7 +53,7 @@ ic_boostrap_media <- function(variable, alpha){
   
   ic_boostrap <-  boot.ci(replicas, conf = 1 - alpha, type = "bca")$bca[4:5]
   
-  return(intervalo)
+  return(ic_boostrap)
 
 }
 
