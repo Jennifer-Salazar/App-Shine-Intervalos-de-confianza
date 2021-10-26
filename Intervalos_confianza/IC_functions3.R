@@ -1,9 +1,9 @@
 
-normalidad <-  TRUE
+#normalidad <-  TRUE
 
-muestra <- TRUE
+#muestra <- TRUE
 
-conocida <- TRUE
+#conocida <- TRUE
 
 # pivote media ------------------------------------------------------------
 

@@ -53,12 +53,30 @@ shinyUI(fluidPage(
 
         # El párametro restante es conocido o desconocido -------------------------
         
-        column(width = 4, offset = 0,
+        column(width = 2, offset = 0,
 
                uiOutput(outputId = "preguntar_parametro2"),
                
                uiOutput(outputId = "preguntar_conocido")
-        )
+        ),
+        
+        # Botón para prueba de normalidad -----------------------------------------
+        
+        conditionalPanel(
+            condition = "input.parametro != '' && input.nombre_variable != ''",
+            
+            column(width = 3, offset = 0,
+                   
+                   br(),
+                   
+                   actionButton("Normalidad", "Realizar prueba de normalidad")
+                   
+            ),
+            
+            
+            
+        ),
+
     ),
     
     hr(),
@@ -70,7 +88,7 @@ shinyUI(fluidPage(
                  
                  # Mostrar base de datos e información general -----------------------------
                  
-                 tabPanel("Inicio",  icon = icon("table"),
+                 tabPanel("Inicio",  icon = icon("table"), value = "inicio",
                           
                           # Se divide la página horizontalmente
                           fluidRow(
@@ -114,11 +132,11 @@ shinyUI(fluidPage(
 
                  # Verificar normalidad ----------------------------------------------------
 
-                 tabPanel("Prueba de normalidad", icon = icon("chart-bar"),
+                 tabPanel("Prueba de normalidad", icon = icon("chart-bar"), value = "p_normalidad",
                           
                           wellPanel(
                               
-                              actionButton("Normalidad", "Realizar prueba de normalidad"),
+                              #actionButton("Normalidad", "Realizar prueba de normalidad"),
                               
                               fluidRow(
                                   column(width = 6,
@@ -140,7 +158,7 @@ shinyUI(fluidPage(
 
                  # Calcular intervalos de confianza ----------------------------------------
                  
-                 tabPanel("Intervalos de confianza", icon = icon("calculator"),
+                 tabPanel("Intervalos de confianza", icon = icon("calculator"), value = "ic",
                           
                           
                           h4("Ingrese el nivel de confianza (%): "),

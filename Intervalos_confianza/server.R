@@ -1,6 +1,7 @@
 
 library(shiny)
 library(DT)
+library(shinyjs)
 
 # Se cargan los datos
 data <- read.csv("www/Ejercicio6.txt", header = TRUE, encoding = "UTF-8")
@@ -62,6 +63,7 @@ shinyServer(function(input, output) {
                             h4("Seleccionar: "),
                             
                             radioButtons(inputId = "parametro2_conocido",
+                                         selected = opciones[2],
                                          label = "", choices = opciones)
                         )
                         
@@ -165,22 +167,21 @@ shinyServer(function(input, output) {
         source("IC_functions3.R")
         
         variable <- data[,input$nombre_variable]
+        
+        n <- length(variable)
+        
+        alpha <- 1 - input$nivel_de_confianza * 0.01
+        
+        # Normalidad
+        p_val_normalidad <- shapiro.test(variable)$p.value
+        
+        normalidad <- ifelse(p_val_normalidad > 0.1, T, F)
 
         # Intervalos de confianza para la media -----------------------------------
         
         if(input$parametro == "\u03BC"){
             
             x_barra <- mean(variable)
-            
-            n <- length(variable)
-            
-            alpha <- 1 - input$nivel_de_confianza * 0.01
-            
-            # Normalidad
-            p_val_normalidad <- shapiro.test(variable)$p.value
-            
-            normalidad <- ifelse(p_val_normalidad > 0.1, T, F)
-            
             
             # Varianza o no conocida
             
@@ -231,6 +232,52 @@ shinyServer(function(input, output) {
         # Invetervalos de confianza para la varianza ------------------------------
             
         }else if(input$parametro == "\u03C3²"){
+            
+            source("IC_varianza.R")
+            
+            # Media o no conocida
+            
+            if( strsplit( input$parametro2_conocido, " ")[[1]][2] == "conocido"){
+                conocida <- TRUE
+                mu <- (input$conocido)
+                
+                s <- sum( (variable - mu)^2 ) / n
+                
+            }else{
+                conocida <- FALSE
+                s <- var(variable)
+            }
+            
+            # Calculo de los intervalos de confianza
+            
+            ic_pivote <- ic_pivote_varianza(s, n, alpha, conocida, normalidad)
+            
+            ic_boostrap <- ic_boostrap_varianza(variable, alpha)
+            
+            
+            # Mostrar los intervalos como un dataframe
+            
+            metodos <- c("Método del pivote", "Boostrap BCA")
+            
+            intervalos <- cbind(ic_pivote, ic_boostrap)
+            colnames(intervalos) <- metodos
+            row.names(intervalos) <- c("límite inferior", "límite superior")
+            
+            output$IC <- renderTable({
+                
+                intervalos
+                
+            }, include.rownames=TRUE)
+            
+            
+            output$parametros_estimados <- renderUI({
+                
+                tagList(
+                    
+                    h5(paste("Estimación puntual varianza: ", round(s, 3)))
+                    
+                )
+            })
             
             
         }
