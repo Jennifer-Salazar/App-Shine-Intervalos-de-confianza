@@ -164,8 +164,6 @@ shinyServer(function(input, output) {
     
     observeEvent(input$calcular_ic, {
         
-        source("IC_media.R")
-        
         variable <- data[,input$nombre_variable]
         
         n <- length(variable)
@@ -180,6 +178,8 @@ shinyServer(function(input, output) {
         # Intervalos de confianza para la media -----------------------------------
         
         if(input$parametro == "\u03BC"){
+            
+            source("IC_media.R")
             
             x_barra <- mean(variable)
             
@@ -246,21 +246,22 @@ shinyServer(function(input, output) {
                 conocida <- FALSE
                 
                 mu <- mean(variable)
-                s2 <- var(variable)
+                s2 <- sum( (variable - mu)^2 ) / (n - 1)
             }
             
             # Calculo de los intervalos de confianza
             
             ic_pivote <- ic_pivote_varianza(s2, n, alpha, conocida, normalidad)
             
-            ic_boostrap <- ic_boostrap_varianza(variable, alpha)
+            ic_mv <- ic_mv_varianza(s2, mu, n, alpha, conocida)
             
+            ic_boostrap <- ic_boostrap_varianza(variable, alpha)
             
             # Mostrar los intervalos como un dataframe
             
-            metodos <- c("Método del pivote", "Boostrap BCA")
+            metodos <- c("Método del pivote", "Máxima verosimilitud", "Boostrap BCA")
             
-            intervalos <- cbind(ic_pivote, ic_boostrap)
+            intervalos <- cbind(ic_pivote, ic_mv, ic_boostrap)
             colnames(intervalos) <- metodos
             row.names(intervalos) <- c("límite inferior", "límite superior")
             
@@ -275,7 +276,9 @@ shinyServer(function(input, output) {
                 
                 tagList(
                     
-                    h5(paste("Estimación puntual varianza: ", round(s, 3)))
+                    h5(paste("Estimación puntual varianza: ", round(s2, 3))),
+                    
+                    h5(paste("Estimación puntual media: ", round(mu, 3)))
                     
                 )
             })

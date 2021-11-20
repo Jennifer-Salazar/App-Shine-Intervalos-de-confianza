@@ -1,13 +1,9 @@
 
-#normalidad <-  TRUE
-
-#muestra <- TRUE
-
-#conocida <- TRUE
-
 # pivote media ------------------------------------------------------------
 
 ic_pivote_media <- function(x_barra, desv, n, alpha, conocida, normalidad){
+  
+  # Si hay normalidad y la varianza es desconocida
   
   if(normalidad & !conocida){
     
@@ -16,9 +12,13 @@ ic_pivote_media <- function(x_barra, desv, n, alpha, conocida, normalidad){
     
     intervalo <- c(pivote_li, pivote_ls)
     
+  # Si no hay normalidad o el tamaño de muestra es menor a 30
+    
   }else if(!normalidad & n<=30){
    
     intervalo <- "No se puede calcular, es necesario conocer la distribución exacta"
+    
+  # Cuando hay normalidad y la varianza es conocida o cuando n > 30
      
   }else{
     
@@ -62,19 +62,21 @@ ic_boostrap_media <- function(variable, alpha){
 
 ic_mv_media <- function(x_barra, desv, n, alpha, conocida){
   
+  
+  p <- exp(-1 * qchisq(p = 1 - alpha, df = 1)/2)
+  
+  
   # Cuando la varianza es conocida
   
   if(conocida){
 
-    mv_funcion <- function(mu){
-      
-      p <- exp(-1 * qchisq(p = 1 - alpha, df = 1)/2)
+    mv_funcion <- function(mu, p){
       
       return(-n/(2*desv^2) * (mu - x_barra)^2 - log(p))
     }
     
-    mv_li <- uniroot(mv_funcion, c(-999999, x_barra), tol = 0.000001)$root
-    mv_ls <- uniroot(mv_funcion, c(x_barra, 999999), tol = 0.000001)$root
+    mv_li <- uniroot(mv_funcion, c(-999999, x_barra), tol = 0.000001, p = p)$root
+    mv_ls <- uniroot(mv_funcion, c(x_barra, 999999), tol = 0.000001, p = p)$root
     
   # Cuando la varianza es desconocida
   
@@ -82,16 +84,14 @@ ic_mv_media <- function(x_barra, desv, n, alpha, conocida){
     
     var_estimada <- (n-1)/n * desv^2
     
-    rmax_mu <- function(mu){
-      
-      p <- exp(-1 * qchisq(p = 1 - alpha, df = 1)/2)
+    rmax_mu <- function(mu, p){
       
       return(n/2 * log(var_estimada/(var_estimada + (x_barra - mu)^2)) - log(p))
       
     }
     
-    mv_li <- uniroot(rmax_mu, c(-999999, x_barra), tol = 0.000001)$root
-    mv_ls <- uniroot(rmax_mu, c(x_barra, 999999), tol = 0.000001)$root
+    mv_li <- uniroot(rmax_mu, c(-999999, x_barra), tol = 0.000001, p = p)$root
+    mv_ls <- uniroot(rmax_mu, c(x_barra, 999999), tol = 0.000001, p = p)$root
     
   }
   
