@@ -164,7 +164,7 @@ shinyServer(function(input, output) {
     
     observeEvent(input$calcular_ic, {
         
-        source("IC_functions3.R")
+        source("IC_media.R")
         
         variable <- data[,input$nombre_variable]
         
@@ -197,7 +197,7 @@ shinyServer(function(input, output) {
             
             ic_pivote <- ic_pivote_media(x_barra, desv, n, alpha, conocida, normalidad)
             
-            ic_mv <- ic_mv_media(x_barra, desv, n, alpha)
+            ic_mv <- ic_mv_media(x_barra, desv, n, alpha, conocida)
             
             ic_boostrap <- ic_boostrap_media(variable, alpha)
             
@@ -240,17 +240,18 @@ shinyServer(function(input, output) {
             if( strsplit( input$parametro2_conocido, " ")[[1]][2] == "conocido"){
                 conocida <- TRUE
                 mu <- (input$conocido)
-                
-                s <- sum( (variable - mu)^2 ) / n
+                s2 <- sum( (variable - mu)^2 ) / n
                 
             }else{
                 conocida <- FALSE
-                s <- var(variable)
+                
+                mu <- mean(variable)
+                s2 <- var(variable)
             }
             
             # Calculo de los intervalos de confianza
             
-            ic_pivote <- ic_pivote_varianza(s, n, alpha, conocida, normalidad)
+            ic_pivote <- ic_pivote_varianza(s2, n, alpha, conocida, normalidad)
             
             ic_boostrap <- ic_boostrap_varianza(variable, alpha)
             

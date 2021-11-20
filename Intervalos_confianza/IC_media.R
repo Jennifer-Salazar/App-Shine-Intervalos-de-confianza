@@ -60,17 +60,40 @@ ic_boostrap_media <- function(variable, alpha){
 
 # Máxima verosimilitud media ----------------------------------------------
 
-ic_mv_media <- function(x_barra, desv, n, alpha){
+ic_mv_media <- function(x_barra, desv, n, alpha, conocida){
   
-  mv_funcion <- function(x){
+  # Cuando la varianza es conocida
+  
+  if(conocida){
+
+    mv_funcion <- function(mu){
+      
+      p <- exp(-1 * qchisq(p = 1 - alpha, df = 1)/2)
+      
+      return(-n/(2*desv^2) * (mu - x_barra)^2 - log(p))
+    }
     
-    p <- exp(-1 * qchisq(p = 1 - alpha, df = 1)/2)
+    mv_li <- uniroot(mv_funcion, c(-999999, x_barra), tol = 0.000001)$root
+    mv_ls <- uniroot(mv_funcion, c(x_barra, 999999), tol = 0.000001)$root
     
-    return(-n/(2*desv^2) * (x - x_barra)^2 - log(p))
+  # Cuando la varianza es desconocida
+  
+  }else{
+    
+    var_estimada <- (n-1)/n * desv^2
+    
+    rmax_mu <- function(mu){
+      
+      p <- exp(-1 * qchisq(p = 1 - alpha, df = 1)/2)
+      
+      return(n/2 * log(var_estimada/(var_estimada + (x_barra - mu)^2)) - log(p))
+      
+    }
+    
+    mv_li <- uniroot(rmax_mu, c(-999999, x_barra), tol = 0.000001)$root
+    mv_ls <- uniroot(rmax_mu, c(x_barra, 999999), tol = 0.000001)$root
+    
   }
-  
-  mv_li <- uniroot(mv_funcion, c(-999999, x_barra), tol = 0.000001)$root
-  mv_ls <- uniroot(mv_funcion, c(x_barra, 999999), tol = 0.000001)$root
   
   intervalo <- c(mv_li, mv_ls)
   

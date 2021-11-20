@@ -58,4 +58,3 @@ ic_boostrap_varianza <- function(variable, alpha){
 
 # Máxima verosimilitud varianza -------------------------------------------
 
-
