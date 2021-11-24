@@ -161,19 +161,19 @@ shinyUI(fluidPage(
                  tabPanel("Intervalos de confianza", icon = icon("calculator"), value = "ic",
                           
                           
-                          h4("Ingrese el nivel de confianza (%): "),
+                          #h4("Ingrese el nivel de confianza (%): "),
                           
                           fluidRow(
                           
-                              column(width = 1,
+                              column(width = 3,
                                      
-                                     numericInput(inputId = "nivel_de_confianza", label = "", 
+                                     sliderInput(inputId = "nivel_de_confianza", label = "Nivel de confianza en %", 
                                                   value = 95, min = 0, max = 100),
                                      
                                      actionButton(inputId = "calcular_ic", label = "calcular IC", icon = icon("calculator"))
                               ),
                               
-                              column(width = 8, offset = 3,
+                              column(width = 6, offset = 3,
                                      
                                      tableOutput("IC")
                                   
