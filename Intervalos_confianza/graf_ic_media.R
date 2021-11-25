@@ -1,13 +1,16 @@
 
 require(latex2exp)
 
-# Gráficos pivote ---------------------------------------------------------
+
+# Gráficos pivote media ---------------------------------------------------
 
 graf_pivote_media <- function(x_barra, desv, li, ls, n, conocida, normalidad){
   
   # Si hay normalidad y la varianza es desconocida
   
   if(normalidad & !conocida){
+    
+    set.seed(90423)
     
     # Simulación de la T-student no centrada
     v <- n-1
@@ -31,8 +34,7 @@ graf_pivote_media <- function(x_barra, desv, li, ls, n, conocida, normalidad){
     }else{
       rango <- c(x_barra-3*sd(T_student), max(T_student))
     }
-    
-    
+  
     # Gráfico
     plot(eje_x, eje_y, ylab="", xlab="", type="l", lwd=2, bty = "n", xaxt="n", xlim = rango)
     polygon(x_ic, y_ic, col = rgb(1, 0, 0, alpha = 0.5))
@@ -42,12 +44,15 @@ graf_pivote_media <- function(x_barra, desv, li, ls, n, conocida, normalidad){
     abline(h = 0)
     grid()
     
+    grafico <- recordPlot()
   
   # Si no hay normalidad o el tamaño de muestra es menor a 30
   
   }else if(!normalidad & n<=30){
     
-    intervalo <- "No se puede calcular, es necesario conocer la distribución exacta"
+    plot.new()
+    
+    grafico <- recordPlot()
     
     # Cuando hay normalidad y la varianza es conocida o cuando n > 30
     
@@ -74,12 +79,16 @@ graf_pivote_media <- function(x_barra, desv, li, ls, n, conocida, normalidad){
     abline(h = 0)
     grid()
     
+    grafico <- recordPlot()
     
   }
-
+  
+  return(grafico)
   
 }
 
+
+# Gráficos boostrap media -------------------------------------------------
 
 
 graf_boostrap_media <- function(replicas, x_barra, li, ls){
@@ -98,8 +107,14 @@ graf_boostrap_media <- function(replicas, x_barra, li, ls){
   abline(h = 0)
   grid()
   
+  grafico <- recordPlot()
+  
+  return(grafico)
+  
 }
 
+
+# Gráfico MV media --------------------------------------------------------
 
 
 graf_mv_media <- function(x_barra, desv, n, conocida, li, ls){
@@ -144,7 +159,9 @@ graf_mv_media <- function(x_barra, desv, n, conocida, li, ls){
   abline(h = 0)
   grid()
   
+  grafico <- recordPlot()
   
+  return(grafico)
 }
 
   

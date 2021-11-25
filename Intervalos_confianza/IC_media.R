@@ -1,7 +1,13 @@
 
+source("graf_ic_media.R")
+
 # pivote media ------------------------------------------------------------
 
 ic_pivote_media <- function(x_barra, desv, n, alpha, conocida, normalidad){
+  
+
+  # Calculo del intervalo ---------------------------------------------------
+
   
   # Si hay normalidad y la varianza es desconocida
   
@@ -29,7 +35,13 @@ ic_pivote_media <- function(x_barra, desv, n, alpha, conocida, normalidad){
     
   }
   
-  return(intervalo)
+
+  # Obtener gráfica ---------------------------------------------------------
+
+  grafica <- graf_pivote_media(x_barra, desv, pivote_li, pivote_ls, n, conocida, normalidad)
+  
+  
+  return(list(intervalo, grafica))
   
 }
 
@@ -38,6 +50,9 @@ ic_pivote_media <- function(x_barra, desv, n, alpha, conocida, normalidad){
 
 
 ic_boostrap_media <- function(variable, alpha){
+  
+
+  # Calculo del intervalo ---------------------------------------------------
   
   library(boot)
   
@@ -53,7 +68,15 @@ ic_boostrap_media <- function(variable, alpha){
   
   ic_boostrap <-  boot.ci(replicas, conf = 1 - alpha, type = "bca")$bca[4:5]
   
-  return(ic_boostrap)
+  # Obtener gráfica ---------------------------------------------------------
+  
+  boostrap_li <- ic_boostrap[1]
+  boostrap_ls <- ic_boostrap[2]
+  
+  grafica <- graf_boostrap_media(replicas, x_barra = mean(variable), boostrap_li, boostrap_ls)
+  
+  
+  return(list(ic_boostrap, grafica))
 
 }
 
@@ -62,6 +85,7 @@ ic_boostrap_media <- function(variable, alpha){
 
 ic_mv_media <- function(x_barra, desv, n, alpha, conocida){
   
+  # Calculo del intervalo ---------------------------------------------------
   
   p <- exp(-1 * qchisq(p = 1 - alpha, df = 1)/2)
   
@@ -97,5 +121,9 @@ ic_mv_media <- function(x_barra, desv, n, alpha, conocida){
   
   intervalo <- c(mv_li, mv_ls)
   
-  return(intervalo)
+  # Obtener gráfica ---------------------------------------------------------
+  
+  grafica <- graf_mv_media(x_barra, desv, n, conocida, mv_li, mv_ls)
+  
+  return(list(intervalo, grafica))
 }

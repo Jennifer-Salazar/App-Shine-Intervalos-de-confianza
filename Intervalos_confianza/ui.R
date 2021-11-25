@@ -67,9 +67,14 @@ shinyUI(fluidPage(
             
             column(width = 3, offset = 0,
                    
-                   br(),
+                   h4("Ingrese el nivel de confianza (%): "),
                    
-                   actionButton("Normalidad", "Realizar prueba de normalidad")
+                   sliderInput(inputId = "nivel_de_confianza", label = "", 
+                               value = 95, min = 90, max = 99),
+                   
+                   actionButton("Normalidad", "Realizar prueba de normalidad"),
+                   
+                   actionButton(inputId = "calcular_ic", label = "calcular IC", icon = icon("calculator"))
                    
             ),
             
@@ -84,11 +89,11 @@ shinyUI(fluidPage(
     
     # Panel lateral -----------------------------------------------------------    
     
-    navlistPanel("App shiny", widths = c(2, 10),
+    tabsetPanel(#"", widths = c(1, 11),
                  
                  # Mostrar base de datos e información general -----------------------------
                  
-                 tabPanel("Inicio",  icon = icon("table"), value = "inicio",
+                 tabPanel("",  icon = icon("table"), value = "inicio",
                           
                           # Se divide la página horizontalmente
                           fluidRow(
@@ -132,7 +137,7 @@ shinyUI(fluidPage(
 
                  # Verificar normalidad ----------------------------------------------------
 
-                 tabPanel("Prueba de normalidad", icon = icon("chart-bar"), value = "p_normalidad",
+                 tabPanel("", icon = icon("chart-bar"), value = "p_normalidad",
                           
                           wellPanel(
                               
@@ -158,36 +163,70 @@ shinyUI(fluidPage(
 
                  # Calcular intervalos de confianza ----------------------------------------
                  
-                 tabPanel("Intervalos de confianza", icon = icon("calculator"), value = "ic",
+                 tabPanel("", icon = icon("calculator"), value = "ic",
                           
                           
-                          #h4("Ingrese el nivel de confianza (%): "),
-                          
-                          fluidRow(
-                          
-                              column(width = 3,
+                          column(width = 4,
+                                 
+                                 verticalLayout(
                                      
-                                     sliderInput(inputId = "nivel_de_confianza", label = "Nivel de confianza en %", 
-                                                  value = 95, min = 0, max = 100),
+                                     wellPanel(
+                                         
+                                         plotOutput(outputId = "graf_pivote")
+                                         
+                                     ),
                                      
-                                     actionButton(inputId = "calcular_ic", label = "calcular IC", icon = icon("calculator"))
-                              ),
-                              
-                              column(width = 6, offset = 3,
+                                     wellPanel(
+                                         #tableOutput("IC")
+                                     ),
                                      
-                                     tableOutput("IC")
-                                  
-                              )
+                                     wellPanel(
+                                         #uiOutput("parametros_estimados")
+                                     )
+                                     
+                                     
+                                 )
+                                 
+                               
                           ),
                           
-                          fluidRow(
-                              
-                              column(width = 8, offset = 4,
+                          column(width = 4,
+                                 
+                                 wellPanel(
                                      
+                                     plotOutput(outputId = "graf_MV")
+                                     
+                                 ),
+                                 
+                                 wellPanel(
+                                     #tableOutput("IC")
+                                 ),
+                                 
+                                 wellPanel(
+                                     #uiOutput("parametros_estimados")
+                                 )
+                                 
+                          ),
+                          
+                          
+                          column(width = 4,
+                                 
+                                 wellPanel(
+                                     
+                                     plotOutput(outputId = "graf_boostrap")
+                                     
+                                 ),
+                                 
+                                 wellPanel(
+                                     tableOutput("IC")
+                                 ),
+                                 
+                                 wellPanel(
                                      uiOutput("parametros_estimados")
-                                     
-                              )
-                          )                          
+                                 )
+                                 
+                          )
+                              
                  )
                  
                  

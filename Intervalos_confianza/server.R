@@ -193,13 +193,21 @@ shinyServer(function(input, output) {
                 desv <- sd(variable)
             }
             
-            # Calculo de los intervalos de confianza
+            # Calculo de los intervalos de confianza y gráficas
             
-            ic_pivote <- ic_pivote_media(x_barra, desv, n, alpha, conocida, normalidad)
+            pivote <- ic_pivote_media(x_barra, desv, n, alpha, conocida, normalidad)
             
-            ic_mv <- ic_mv_media(x_barra, desv, n, alpha, conocida)
+            mv <- ic_mv_media(x_barra, desv, n, alpha, conocida)
             
-            ic_boostrap <- ic_boostrap_media(variable, alpha)
+            boostrap <- ic_boostrap_media(variable, alpha)
+            
+            # Obtener intervalos de confianza
+            
+            ic_pivote <- pivote[[1]]
+            
+            ic_mv <- mv[[1]]
+            
+            ic_boostrap <- boostrap[[1]]
             
             
             # Mostrar los intervalos como un dataframe
@@ -226,6 +234,27 @@ shinyServer(function(input, output) {
                     h5(paste("Estimación puntual varianza: ", round(desv^2, 3)))
                 
                 )
+            })
+            
+
+            # Gráficar intervalos para la media ---------------------------------------
+            
+            output$graf_pivote <- renderPlot({
+                
+                pivote[[2]]
+                
+            })
+            
+            output$graf_MV <- renderPlot({
+                
+                mv[[2]]
+                
+            })
+            
+            output$graf_boostrap <- renderPlot({
+                
+                boostrap[[2]]
+                
             })
             
             
