@@ -3,6 +3,7 @@ options(encoding = 'UTF-8')
 # Librerias
 library(shiny)
 library(shinyjs)
+library(rpivotTable)
 
 # UI ----------------------------------------------------------------------
 
@@ -136,7 +137,13 @@ shinyUI(fluidPage(
                                      
                               )
                               
-                          )        
+                          ),
+                          
+                          hr(),
+                          
+                          rpivotTableOutput(outputId = "EDA"),
+                          
+                          hr(),
                  ),
                  
 
@@ -146,8 +153,6 @@ shinyUI(fluidPage(
                           
                           wellPanel(
                               
-                              #actionButton("Normalidad", "Realizar prueba de normalidad"),
-                              
                               fluidRow(
                                   column(width = 6,
                                          plotOutput("qqplot")
@@ -156,10 +161,6 @@ shinyUI(fluidPage(
                                          plotOutput("histograma")
                                   )
                               ),
-                              
-                              # plotOutput("qqplot"),
-
-                              # plotOutput("histograma"),
                               
                               verbatimTextOutput("Shapiro")   
                           )      
@@ -182,7 +183,7 @@ shinyUI(fluidPage(
                                      ),
                                      
                                      wellPanel(
-                                         #tableOutput("IC")
+                                         tableOutput("IC_pivote")
                                      ),
                                      
                                      wellPanel(
@@ -204,7 +205,7 @@ shinyUI(fluidPage(
                                  ),
                                  
                                  wellPanel(
-                                     #tableOutput("IC")
+                                     tableOutput("IC")
                                  ),
                                  
                                  wellPanel(
@@ -223,7 +224,7 @@ shinyUI(fluidPage(
                                  ),
                                  
                                  wellPanel(
-                                     tableOutput("IC")
+                                     tableOutput("IC_boostrap")
                                  ),
                                  
                                  wellPanel(

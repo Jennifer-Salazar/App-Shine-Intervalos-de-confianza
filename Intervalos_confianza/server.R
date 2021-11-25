@@ -2,6 +2,7 @@
 library(DT)
 library(shiny)
 library(shinyjs)
+library(rpivotTable)
 
 # Se cargan los datos
 data <- read.csv("www/Ejercicio6.txt", header = TRUE, encoding = "UTF-8")
@@ -133,6 +134,14 @@ shinyServer(function(input, output, session) {
         dim(data)[2]
     })
     
+    
+    # Se muestra rpivotTable para análisis descriptivo
+    output$EDA <- renderRpivotTable({
+        
+        rpivotTable(data = data)
+        
+    })
+    
 
     # Prueba de normalidad ----------------------------------------------------
     
@@ -142,7 +151,9 @@ shinyServer(function(input, output, session) {
         toggle(condition = TRUE, selector = "#Tabset li a[data-value=p_normalidad]")
         updateTabsetPanel(session, "Tabset", "p_normalidad")
         
-        variable <- data[,input$nombre_variable]
+        nom_variable <- input$nombre_variable
+        
+        variable <- data[,nom_variable]
         
         output$qqplot <- renderPlot({
             qqnorm(variable, pch=19)
@@ -152,7 +163,8 @@ shinyServer(function(input, output, session) {
         })
         
         output$histograma <- renderPlot({
-            hist(variable, col = "cyan4")
+            boxplot(variable, col = "cyan4", 
+                    main = paste("Boxplot de", nom_variable), xlab = nom_variable)
             grid()
 
         })

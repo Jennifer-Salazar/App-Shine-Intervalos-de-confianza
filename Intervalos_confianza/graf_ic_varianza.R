@@ -37,7 +37,7 @@ graf_pivote_varianza <- function(s2, n, conocida, alpha, li, ls){
   plot(eje_x, eje_y, type="l", xlab = "", ylab = "", las = 1, lwd = 2, xaxt = "n", bty = "n")
   polygon(x_ic, y_ic, col = rgb(1, 0, 0, alpha = 0.5))
   abline(v=s2_aux, lty=3)
-  axis(1, at = c(li_aux, s2_aux, ls_aux), labels = c(li, round(s2,3), ls))
+  axis(1, at = c(li_aux, s2_aux, ls_aux), labels = round(c(li, s2, ls), 3) )
   title(main = "Método del pivote")
   abline(h = 0)
   grid()

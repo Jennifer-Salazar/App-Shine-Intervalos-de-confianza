@@ -34,7 +34,7 @@ ic_pivote_varianza <- function(s2, n, alpha, conocida, normalidad){
   # Obtener gráfica ---------------------------------------------------------
   
   
-  grafica <- graf_pivote_varianza(s2, n, conocida)
+  grafica <- graf_pivote_varianza(s2, n, conocida, alpha, pivote_li, pivote_ls)
   
   return(list(intervalo, grafica))
   
