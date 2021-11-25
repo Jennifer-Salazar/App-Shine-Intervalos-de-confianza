@@ -11,7 +11,6 @@ graf_pivote_varianza <- function(s2, n, conocida, alpha, li, ls){
   }
   
   
-  
   # valores minimos y máximos para el gráfico de la normal
   x_min <- qchisq(0.0001, grados_libertad)
   x_max <- qchisq(0.9999, grados_libertad)
@@ -21,15 +20,12 @@ graf_pivote_varianza <- function(s2, n, conocida, alpha, li, ls){
   eje_y <- dchisq(eje_x, grados_libertad)
   
   # Se crean los puntos para pintar el área del intervalo
-  total <- x_max - x_min
-  area <- total*(alpha/2)
-  li_aux <- x_min + area
-  ls_aux <- x_max - area  
+  li_aux <- qchisq(alpha/2, grados_libertad)
+  ls_aux <- qchisq(1-(alpha/2), grados_libertad) 
   
-  s2_aux <- s2 / ((ls-li)/(ls_aux-li_aux))
-  s2_aux <- round(s2_aux,3)
+  s2_aux <- grados_libertad
   
-
+  
   x_ic <- c(li_aux, seq(li_aux, ls_aux, by=(ls_aux-li_aux)/1000), ls_aux)
   y_ic <- c(0, dchisq(seq(li_aux, ls_aux, by=(ls_aux-li_aux)/1000), grados_libertad), 0)
   
@@ -37,7 +33,7 @@ graf_pivote_varianza <- function(s2, n, conocida, alpha, li, ls){
   plot(eje_x, eje_y, type="l", xlab = "", ylab = "", las = 1, lwd = 2, xaxt = "n", bty = "n")
   polygon(x_ic, y_ic, col = rgb(1, 0, 0, alpha = 0.5))
   abline(v=s2_aux, lty=3)
-  axis(1, at = c(li_aux, s2_aux, ls_aux), labels = round(c(li, s2, ls), 3) )
+  axis(1, at = c(li_aux, s2_aux, ls_aux), labels = c(li, round(s2,3), ls))
   title(main = "Método del pivote")
   abline(h = 0)
   grid()
