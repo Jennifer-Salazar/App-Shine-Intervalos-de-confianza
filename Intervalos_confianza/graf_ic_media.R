@@ -1,7 +1,4 @@
 
-require(latex2exp)
-
-
 # Gráficos pivote media ---------------------------------------------------
 
 graf_pivote_media <- function(x_barra, desv, li, ls, n, conocida, normalidad){
