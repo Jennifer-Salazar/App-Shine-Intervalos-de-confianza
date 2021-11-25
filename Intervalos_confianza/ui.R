@@ -2,11 +2,13 @@ options(encoding = 'UTF-8')
 
 # Librerias
 library(shiny)
+library(shinyjs)
 
 # UI ----------------------------------------------------------------------
 
 shinyUI(fluidPage(
     
+    useShinyjs(),
     
     # Título ------------------------------------------------------------------
     
@@ -73,7 +75,7 @@ shinyUI(fluidPage(
                    sliderInput(inputId = "nivel_de_confianza", label = "", 
                                value = 95, min = 90, max = 99),
                    
-                   actionButton("Normalidad", "Realizar prueba de normalidad"),
+                   actionButton("Normalidad", "Verificar normalidad"),
                    
                    actionButton(inputId = "calcular_ic", label = "calcular IC", icon = icon("calculator"))
                    
@@ -90,7 +92,7 @@ shinyUI(fluidPage(
     
     # Panel lateral -----------------------------------------------------------    
     
-    tabsetPanel(#"", widths = c(1, 11),
+    tabsetPanel(id = "Tabset", #"", widths = c(1, 11),
                  
                  # Mostrar base de datos e información general -----------------------------
                  
@@ -98,6 +100,8 @@ shinyUI(fluidPage(
                           
                           # Se divide la página horizontalmente
                           fluidRow(
+                              
+                              br(),
                               
                               # lado izquierdo
                               column(width = 9,

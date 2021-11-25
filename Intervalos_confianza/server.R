@@ -1,6 +1,6 @@
 
-library(shiny)
 library(DT)
+library(shiny)
 library(shinyjs)
 
 # Se cargan los datos
@@ -9,8 +9,10 @@ data <- read.csv("www/Ejercicio6.txt", header = TRUE, encoding = "UTF-8")
 
 # Server ------------------------------------------------------------------
 
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
     
+    toggle(condition = FALSE, selector = "#Tabset li a[data-value=p_normalidad]")
+    toggle(condition = FALSE, selector = "#Tabset li a[data-value=ic]")
 
     # Mostrar cuestionario para la variable a usar en el IC -------------------
     
@@ -136,6 +138,10 @@ shinyServer(function(input, output) {
     
     observeEvent(input$Normalidad, {
         
+        # Enviar a el panel donde se realiza la prueba de normalidad
+        toggle(condition = TRUE, selector = "#Tabset li a[data-value=p_normalidad]")
+        updateTabsetPanel(session, "Tabset", "p_normalidad")
+        
         variable <- data[,input$nombre_variable]
         
         output$qqplot <- renderPlot({
@@ -163,6 +169,10 @@ shinyServer(function(input, output) {
     # Calculo de intervalos de confianza --------------------------------------
     
     observeEvent(input$calcular_ic, {
+        
+        # Mostrar el panel destinado para el calculo de los IC
+        toggle(condition = TRUE, selector = "#Tabset li a[data-value=ic]")
+        updateTabsetPanel(session, "Tabset", "ic")
         
         variable <- data[,input$nombre_variable]
         
@@ -201,29 +211,8 @@ shinyServer(function(input, output) {
             
             boostrap <- ic_boostrap_media(variable, alpha)
             
-            # Obtener intervalos de confianza
             
-            ic_pivote <- pivote[[1]]
-            
-            ic_mv <- mv[[1]]
-            
-            ic_boostrap <- boostrap[[1]]
-            
-            
-            # Mostrar los intervalos como un dataframe
-            
-            metodos <- c("Método del pivote", "Máxima verosimilitud", "Boostrap BCA")
-            
-            intervalos <- cbind(ic_pivote, ic_mv, ic_boostrap)
-            colnames(intervalos) <- metodos
-            row.names(intervalos) <- c("límite inferior", "límite superior")
-            
-            output$IC <- renderTable({
-                
-                intervalos
-                
-            }, include.rownames=TRUE)
-            
+            # Imprimir parámetros estimados media
             
             output$parametros_estimados <- renderUI({
                 
@@ -234,27 +223,6 @@ shinyServer(function(input, output) {
                     h5(paste("Estimación puntual varianza: ", round(desv^2, 3)))
                 
                 )
-            })
-            
-
-            # Gráficar intervalos para la media ---------------------------------------
-            
-            output$graf_pivote <- renderPlot({
-                
-                pivote[[2]]
-                
-            })
-            
-            output$graf_MV <- renderPlot({
-                
-                mv[[2]]
-                
-            })
-            
-            output$graf_boostrap <- renderPlot({
-                
-                boostrap[[2]]
-                
             })
             
             
@@ -273,45 +241,30 @@ shinyServer(function(input, output) {
                 x_barra <- mean(variable)
                 s2_x_barra <- sum((variable - x_barra)^2) / n
                 
-                ic_mv <- ic_mv_varianza_conocida(s2_x_barra, s2_mu, mu, n, alpha)
+                # Calculo de los intervalos de confianza y gráficas
+                mv <- ic_mv_varianza_conocida(s2_x_barra, s2_mu, n, alpha)
+                pivote <- ic_pivote_varianza(s2_mu, n, alpha, conocida, normalidad)
+                boostrap <- ic_boostrap_varianza(variable, alpha)
                 
             }else{
                 conocida <- FALSE
-                
                 mu <- mean(variable)
-                s2 <- sum( (variable - mu)^2 ) / (n - 1)
+                s2_mu <- sum( (variable - mu)^2 ) / (n - 1)
                 
-                ic_mv <- ic_mv_varianza_desconocida(s2, mu, n, alpha)
+                # Calculo de los intervalos de confianza y gráficas
+                mv <- ic_mv_varianza_desconocida(s2_mu, mu, n, alpha)
+                pivote <- ic_pivote_varianza(s2_mu, n, alpha, conocida, normalidad)
+                boostrap <- ic_boostrap_varianza(variable, alpha)
             }
             
-            # Calculo de los intervalos de confianza
             
-            ic_pivote <- ic_pivote_varianza(s2, n, alpha, conocida, normalidad)
-            
-            
-            
-            ic_boostrap <- ic_boostrap_varianza(variable, alpha)
-            
-            # Mostrar los intervalos como un dataframe
-            
-            metodos <- c("Método del pivote", "Máxima verosimilitud", "Boostrap BCA")
-            
-            intervalos <- cbind(ic_pivote, ic_mv, ic_boostrap)
-            colnames(intervalos) <- metodos
-            row.names(intervalos) <- c("límite inferior", "límite superior")
-            
-            output$IC <- renderTable({
-                
-                intervalos
-                
-            }, include.rownames=TRUE)
-            
+            # Imprimir parámetros estimados varianza
             
             output$parametros_estimados <- renderUI({
                 
                 tagList(
                     
-                    h5(paste("Estimación puntual varianza: ", round(s2, 3))),
+                    h5(paste("Estimación puntual varianza: ", round(s2_mu, 3))),
                     
                     h5(paste("Estimación puntual media: ", round(mu, 3)))
                     
@@ -320,6 +273,53 @@ shinyServer(function(input, output) {
             
             
         }
+        
+
+        # Obtener intervalos de confianza -----------------------------------------
+        
+        ic_pivote <- pivote[[1]]
+        
+        ic_mv <- mv[[1]]
+        
+        ic_boostrap <- boostrap[[1]]
+        
+        
+        # Mostrar los intervalos de confianza -------------------------------------
+        
+        
+        metodos <- c("Método del pivote", "Máxima verosimilitud", "Boostrap BCA")
+        
+        intervalos <- cbind(ic_pivote, ic_mv, ic_boostrap)
+        colnames(intervalos) <- metodos
+        row.names(intervalos) <- c("límite inferior", "límite superior")
+        
+        output$IC <- renderTable({
+            
+            intervalos
+            
+        }, include.rownames=TRUE)
+        
+
+        # Gráficar intervalos de confianza ----------------------------------------
+        
+        
+        output$graf_pivote <- renderPlot({
+            
+            pivote[[2]]
+            
+        })
+        
+        output$graf_MV <- renderPlot({
+            
+            mv[[2]]
+            
+        })
+        
+        output$graf_boostrap <- renderPlot({
+            
+            boostrap[[2]]
+            
+        })
         
     })
         
