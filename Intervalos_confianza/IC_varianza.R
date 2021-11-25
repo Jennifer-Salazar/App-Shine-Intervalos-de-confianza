@@ -1,8 +1,10 @@
-
+source("graf_ic_varianza.R")
 
 # pivote varianza ---------------------------------------------------------
 
 ic_pivote_varianza <- function(s2, n, alpha, conocida, normalidad){
+  
+  # Calculo del intervalo ---------------------------------------------------
   
   if(normalidad & !conocida){
     
@@ -27,10 +29,14 @@ ic_pivote_varianza <- function(s2, n, alpha, conocida, normalidad){
     
     intervalo <- "No se puede calcular, no se cumple el supuesto de normalidad"
     
-    
   }
   
-  return(intervalo)
+  # Obtener gráfica ---------------------------------------------------------
+  
+  
+  grafica <- graf_pivote_varianza(s2, n, conocida)
+  
+  return(list(intervalo, grafica))
   
 }
 
@@ -39,6 +45,8 @@ ic_pivote_varianza <- function(s2, n, alpha, conocida, normalidad){
 
 
 ic_boostrap_varianza <- function(variable, alpha){
+  
+  # Calculo del intervalo ---------------------------------------------------
   
   library(boot)
   
@@ -54,13 +62,25 @@ ic_boostrap_varianza <- function(variable, alpha){
   
   ic_boostrap <-  boot.ci(replicas, conf = 1 - alpha, type = "bca")$bca[4:5]
   
-  return(ic_boostrap)
+  # Obtener gráfica ---------------------------------------------------------
+  boostrap_li <- ic_boostrap[1]
+  boostrap_ls <- ic_boostrap[2]
+  
+  grafica <- graf_boostrap_varianza(replicas, s2 = var(variable), boostrap_li, boostrap_ls)
+  
+  
+  return(list(ic_boostrap, grafica))
   
 }
 
 # Máxima verosimilitud varianza -------------------------------------------
 
-ic_mv_varianza_conocida <- function(s2_x_barra, s2_mu, mu, n, alpha){
+
+# media conocida ----------------------------------------------------------
+
+ic_mv_varianza_conocida <- function(s2_x_barra, s2_mu, n, alpha){
+  
+  # Calculo del intervalo ---------------------------------------------------
   
   p <- exp(-1 * qchisq(p = 1 - alpha, df = 1)/2)
   
@@ -75,16 +95,21 @@ ic_mv_varianza_conocida <- function(s2_x_barra, s2_mu, mu, n, alpha){
   mv_li <- uniroot(rmax_sigma, c(0.00001, s2_mu), tol = 0.000001, p = p)$root
   mv_ls <- uniroot(rmax_sigma, c(s2_mu, 999999), tol = 0.000001, p = p)$root
   
-  
-  
   intervalo <- c(mv_li, mv_ls)
   
-  return(intervalo)
+  # Obtener gráfica ---------------------------------------------------------
+  
+  grafica <- graf_mv_varianza_conocida(s2_x_barra, s2_mu, n, mv_li, mv_ls)
+  
+  return(list(intervalo, grafica))
 }
     
-  
-    
+
+# media desconocida -------------------------------------------------------  
+
 ic_mv_varianza_desconocida <- function(s2, mu, n, alpha){
+  
+  # Calculo del intervalo ---------------------------------------------------
   
   p <- exp(-1 * qchisq(p = 1 - alpha, df = 1)/2)
   
@@ -101,7 +126,11 @@ ic_mv_varianza_desconocida <- function(s2, mu, n, alpha){
   
   intervalo <- c(mv_li, mv_ls)
   
-  return(intervalo)
+  # Calculo del intervalo ---------------------------------------------------
+  
+  grafica <- graf_mv_varianza_desconocida(s2, n, mv_li, mv_ls)
+  
+  return(list(intervalo, grafica))
   
 }
     

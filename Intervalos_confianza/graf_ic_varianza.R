@@ -1,22 +1,31 @@
 
-graf_pivote_varianza <- function(conocida, n, s2){
+
+# Gráficos privote varianza -----------------------------------------------
+
+graf_pivote_varianza <- function(s2, n, conocida){
   
-  if(conocida){
-    
-  }
+  plot.new()
+  
+  grafico <- recordPlot()
+  
+  return(grafico)
 }
 
 
 
+# Gráficos boostrap varianza ----------------------------------------------
 
 graf_boostrap_varianza <- function(replicas, s2, li, ls){
   
+  # Se obtiene el eje x y el eje y
   eje_x <- density(replicas$t)$x
   eje_y <- density(replicas$t)$y
   
+  # Se crean los puntos para pintar el área del intervalo
   x_ic <- c(li, eje_x[eje_x >= li & eje_x <= ls], ls)
   y_ic <- c(0, eje_y[eje_x >= li & eje_x <= ls], 0) 
   
+  # Gráfico
   plot(eje_x, eje_y, ylab="", xlab="", type="l", lwd=2, xaxt="n", bty = "n")
   polygon(x_ic, y_ic, col = rgb(1, 0, 0, alpha = 0.5))
   abline(v=s2, lty=3)
@@ -32,9 +41,12 @@ graf_boostrap_varianza <- function(replicas, s2, li, ls){
 }
 
 
+# Gráficos MV varianza conocida -------------------------------------------
+
+
 graf_mv_varianza_conocida <- function(s2_x_barra, s2_mu, n, li, ls){
   
-  # Cuando la varianza es conocida
+  # Función de verosimilitud relativa
   
   R_varianza <- function(varianza){
     
@@ -42,19 +54,19 @@ graf_mv_varianza_conocida <- function(s2_x_barra, s2_mu, n, li, ls){
     
   }
   
-  
-  # valores minimos y máximos para el gráfico de la normal
-  x_min <- li - (ls-li)/4
+  # valores minimos y máximos para el gráfico
+  x_min <- 0
   x_max <- ls + (ls-li)/4
-  # 
-  # 
-  # Se simula el eje x y el eje y
+
+  # Se obtiene el eje x y el eje y
   eje_x <- seq(x_min, x_max, by = (x_max-x_min)/1000)
   eje_y <- R_varianza(eje_x)
 
+  # Se crean los puntos para pintar el área del intervalo
   x_ic <- c(li, seq(li, ls, by=(ls-li)/1000), ls)
   y_ic <- c(0, R_varianza(seq(li, ls, by=(ls-li)/1000)), 0)
 
+  # Gráfico
   plot(eje_x, eje_y, ylab="", xlab="", type="l", lwd=2, bty = "n", xaxt="n")
   polygon(x_ic, y_ic, col = rgb(1, 0, 0, alpha = 0.5))
   abline(v=s2_mu, lty=3)
@@ -69,13 +81,13 @@ graf_mv_varianza_conocida <- function(s2_x_barra, s2_mu, n, li, ls){
 }
 
 
-
+# Gráficos MV varianza desconocida ----------------------------------------
 
 graf_mv_varianza_desconocida <- function(s2, n, li, ls){
   
-  # Cuando la varianza es desconocida
-  
   var_estimada <- (n-1)/n * s2
+  
+  # Función de verosimilitud relativa
   
   R_varianza <- function(varianza){
     
@@ -83,19 +95,19 @@ graf_mv_varianza_desconocida <- function(s2, n, li, ls){
     
   }
   
-  
-  # valores minimos y máximos para el gráfico de la normal
-  
-  x_min <- li - (ls-li)/4
+  # valores minimos y máximos para el gráfico
+  x_min <- 0
   x_max <- ls + (ls-li)/4
  
-  # Se simula el eje x y el eje y
+  # Se obtiene el eje x y el eje y
   eje_x <- seq(x_min, x_max, by = (x_max-x_min)/1000)
   eje_y <- R_varianza(eje_x)
   
+  # Se crean los puntos para pintar el área del intervalo
   x_ic <- c(li, seq(li, ls, by=(ls-li)/1000), ls)
   y_ic <- c(0, R_varianza(seq(li, ls, by=(ls-li)/1000)), 0)
   
+  # Gráfico
   plot(eje_x, eje_y, ylab="", xlab="", type="l", lwd=2, bty = "n", xaxt="n")
   polygon(x_ic, y_ic, col = rgb(1, 0, 0, alpha = 0.5))
   abline(v=s2, lty=3)
