@@ -13,11 +13,7 @@ ic_pivote_varianza <- function(s2, n, alpha, conocida, normalidad){
     
     intervalo <- c(pivote_li, pivote_ls)
     
-  }else if(!normalidad & n<=30){
-    
-    intervalo <- "No se puede calcular, es necesario conocer la distribución exacta"
-    
-  }else{
+  }else if(normalidad & conocida){
     
     # Conocida
     
@@ -25,6 +21,12 @@ ic_pivote_varianza <- function(s2, n, alpha, conocida, normalidad){
     pivote_ls <- n * s2 / qchisq(alpha/2, n)
     
     intervalo <- c(pivote_li, pivote_ls)
+    
+     
+  }else{
+    
+    intervalo <- "No se puede calcular, no se cumple el supuesto de normalidad"
+    
     
   }
   
@@ -58,39 +60,56 @@ ic_boostrap_varianza <- function(variable, alpha){
 
 # Máxima verosimilitud varianza -------------------------------------------
 
-ic_mv_varianza <- function(s2, mu, n, alpha, conocida){
+ic_mv_varianza_conocida <- function(s2_x_barra, s2_mu, mu, n, alpha){
   
   p <- exp(-1 * qchisq(p = 1 - alpha, df = 1)/2)
   
   # Cuando la media es conocida
   
-  if(conocida){
+  rmax_sigma <- function(varianza, p){
     
-    mv_li <- NA
-    mv_ls <- NA
-    
-  # Cuando la media es desconocida
-    
-  }else{
-    
-    var_estimada <- (n-1)/n * s2
-    
-    rmax_sigma <- function(varianza, p){
-      
-      return(n/2 * ( log(var_estimada/varianza) - var_estimada/varianza + 1) - log(p))
-      
-    }
-    
-    mv_li <- uniroot(rmax_sigma, c(0.00001, var_estimada), tol = 0.000001, p = p)$root
-    mv_ls <- uniroot(rmax_sigma, c(var_estimada, 999999), tol = 0.000001, p = p)$root
+    return(n/2 * ( log(s2_x_barra/varianza) + s2_mu*((1/s2_x_barra)-(1/varianza))) - log(p))
     
   }
+  
+  mv_li <- uniroot(rmax_sigma, c(0.00001, s2_mu), tol = 0.000001, p = p)$root
+  mv_ls <- uniroot(rmax_sigma, c(s2_mu, 999999), tol = 0.000001, p = p)$root
+  
+  
+  
+  intervalo <- c(mv_li, mv_ls)
+  
+  return(intervalo)
+}
+    
+  
+    
+ic_mv_varianza_desconocida <- function(s2, mu, n, alpha){
+  
+  p <- exp(-1 * qchisq(p = 1 - alpha, df = 1)/2)
+  
+  var_estimada <- (n-1)/n * s2
+  
+  rmax_sigma <- function(varianza, p){
+    
+    return(n/2 * ( log(var_estimada/varianza) - var_estimada/varianza + 1) - log(p))
+    
+  }
+  
+  mv_li <- uniroot(rmax_sigma, c(0.00001, var_estimada), tol = 0.000001, p = p)$root
+  mv_ls <- uniroot(rmax_sigma, c(var_estimada, 999999), tol = 0.000001, p = p)$root
   
   intervalo <- c(mv_li, mv_ls)
   
   return(intervalo)
   
 }
+    
+    
+  
+  
+ 
+
 
 
 

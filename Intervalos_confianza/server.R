@@ -269,20 +269,26 @@ shinyServer(function(input, output) {
             if( strsplit( input$parametro2_conocido, " ")[[1]][2] == "conocido"){
                 conocida <- TRUE
                 mu <- (input$conocido)
-                s2 <- sum( (variable - mu)^2 ) / n
+                s2_mu <- sum((variable - mu)^2) / n
+                x_barra <- mean(variable)
+                s2_x_barra <- sum((variable - x_barra)^2) / n
+                
+                ic_mv <- ic_mv_varianza_conocida(s2_x_barra, s2_mu, mu, n, alpha)
                 
             }else{
                 conocida <- FALSE
                 
                 mu <- mean(variable)
                 s2 <- sum( (variable - mu)^2 ) / (n - 1)
+                
+                ic_mv <- ic_mv_varianza_desconocida(s2, mu, n, alpha)
             }
             
             # Calculo de los intervalos de confianza
             
             ic_pivote <- ic_pivote_varianza(s2, n, alpha, conocida, normalidad)
             
-            ic_mv <- ic_mv_varianza(s2, mu, n, alpha, conocida)
+            
             
             ic_boostrap <- ic_boostrap_varianza(variable, alpha)
             
