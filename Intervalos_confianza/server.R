@@ -6,7 +6,7 @@ library(rpivotTable)
 
 
 # Se cargan los datos
-data <- read.csv("www/Ejercicio6.txt", header = TRUE, encoding = "UTF-8")
+#data <- read.csv("www/Ejercicio6.txt", header = TRUE, encoding = "UTF-8")
 
 
 # Server ------------------------------------------------------------------
@@ -15,6 +15,48 @@ shinyServer(function(input, output, session) {
     
     toggle(condition = FALSE, selector = "#Tabset li a[data-value=p_normalidad]")
     toggle(condition = FALSE, selector = "#Tabset li a[data-value=ic]")
+    
+
+    # Carga de datos en panel emergente ---------------------------------------
+    
+    
+    data <- reactive({
+        infile <- input$archivo
+        
+        if(is.null(infile)){
+            return(NULL)
+        }else{
+            datafile <- read.table(infile$datapath, header = TRUE, sep=",",encoding = "UTF-8")
+            return(datafile)
+        }
+        
+    })
+    
+    # Se imprime la base de datos
+    output$tabla <- DT::renderDataTable({
+
+        DT::datatable({
+            data <- data()
+        },
+        options = list(lengthMenu = list(c(5,10,-1),  c("5", "10", "All")),
+                       pageLength=5),
+        filter = "top",
+        selection = "multiple",
+        style = "bootstrap")
+
+    })
+    
+    
+    observe({
+        toggle(id = "habilitar_ir_app", condition = !is.null(input$archivo) )
+    })
+    
+
+    # Ejecución del panel principal de la app ---------------------------------
+
+    observeEvent(input$ir_app, {
+    
+    data <- data()
 
     # Mostrar cuestionario para la variable a usar en el IC -------------------
     
@@ -210,6 +252,9 @@ shinyServer(function(input, output, session) {
         p_val_normalidad <- shapiro.test(variable)$p.value
         
         normalidad <- ifelse(p_val_normalidad > 0.1, T, F)
+        
+        # Obtener funciones de formulas latex
+        source("latex.R")
 
         # Intervalos de confianza para la media -----------------------------------
         
@@ -236,6 +281,15 @@ shinyServer(function(input, output, session) {
             mv <- ic_mv_media(x_barra, desv, n, alpha, conocida)
             
             boostrap <- ic_boostrap_media(variable, alpha)
+            
+            
+            # Calculo del latex para cada intervalo
+            
+            latex_pivote <- latex_pivote_media(conocida, normalidad, n)
+            
+            latex_MV <- latex_mv_media(conocida)
+            
+            latex_boostrap <- latex_boostrap_media(100000)
             
             
             # Imprimir parámetros estimados media
@@ -284,6 +338,15 @@ shinyServer(function(input, output, session) {
             }
             
             
+            # Calculo del latex para cada intervalo
+            
+            latex_pivote <- latex_pivote_varianza(conocida)
+            
+            latex_MV <- latex_mv_varianza(conocida)
+            
+            latex_boostrap <- latex_boostrap_varianza(100000)
+            
+            
             # Imprimir parámetros estimados varianza
             
             output$parametros_estimados <- renderUI({
@@ -313,17 +376,17 @@ shinyServer(function(input, output, session) {
         # Mostrar los intervalos de confianza -------------------------------------
         
         
-        metodos <- c("Método del pivote", "Máxima verosimilitud", "Boostrap BCA")
-        
-        intervalos <- cbind(ic_pivote, ic_mv, ic_boostrap)
-        colnames(intervalos) <- metodos
-        row.names(intervalos) <- c("límite inferior", "límite superior")
-        
-        output$IC <- renderTable({
-            
-            intervalos
-            
-        }, include.rownames=TRUE)
+        # metodos <- c("Método del pivote", "Máxima verosimilitud", "Boostrap BCA")
+        # 
+        # intervalos <- cbind(ic_pivote, ic_mv, ic_boostrap)
+        # colnames(intervalos) <- metodos
+        # row.names(intervalos) <- c("límite inferior", "límite superior")
+        # 
+        # output$IC <- renderTable({
+        #     
+        #     intervalos
+        #     
+        # }, include.rownames=TRUE)
         
         output$IC_pivote <- renderUI({
             h4(withMathJax(paste("$$(", round(ic_pivote[1],4), ",", round(ic_pivote[2],4), ")$$", sep="")))
@@ -369,14 +432,39 @@ shinyServer(function(input, output, session) {
             
         })
         
+
+        # Mostrar formula latex intervalos de confianza ---------------------------
+
+        output$pivote_latex <- renderUI({
+            h4(withMathJax(latex_pivote))
+            
+        })
+        
+        output$boostrap_latex <- renderUI({
+            h4(withMathJax(latex_boostrap))
+            
+        })
+        
+        output$MV_latex <- renderUI({
+            (withMathJax(latex_MV))
+            
+        })
+        
+        
+        
+        
     })
         
         
 
     
-
+    }) # ir_app
     
     
+    # Ocultar app mientras carga ----------------------------------------------
+    
+    hide(id = "loading-content", anim = TRUE, animType = "fade")
+    show("app-content")
 
 
 })

@@ -17,10 +17,64 @@ shinyUI(fluidPage(
         tags$link(rel = "stylesheet", type = "text/css", href = "style.css")
     ),
     
+    # Ventana emergente de cargando... ----------------------------------------
+    tags$div(
+        id = "loading-content",
+        tags$h1("Cargando...", class = "cargando"),
+    ),
+    
+    # Contenido oculto por la ventana emergente
+    hidden(
+        
+        tags$div(
+            id = "app-content",
+    
+    
 
     # Panel para cargar una base de datos -------------------------------------
 
+    conditionalPanel(condition = "input.ir_app == 0",
+                     
+                     tags$div(id="jumbotron",
+                              
+                              tags$div(
+                                  
+                                  h2(strong("Aplicación de"), align= "center",
+                                     style="color: black;font-family: cursive"),
+                                  
+                                  h2(strong("Intervalos de Confianza"), align= "center",
+                                     style="color: black;font-family: cursive"),
+                              )
+                     ),
+                     
+                     br(),
+                     
+                    wellPanel(
+                        
+                        fileInput(inputId = "archivo",  
+                                  label = "Ingrese un conjunto de datos", 
+                                  multiple = FALSE,
+                                  accept = c("text/csv",
+                                             "text/comma-separated-values,text/plain",
+                                             ".csv")
+                        )
+                        
+                    ),
+                     
+                    DT::dataTableOutput("tabla"),
+                    
+                    tags$div(id = "habilitar_ir_app",
+
+                        actionButton(inputId = "ir_app", label = "Continuar", icon = icon("home")),
+                    
+                    )
+                     
+    ),
     
+
+    # Panel principal de la app -----------------------------------------------
+
+    conditionalPanel(condition = "input.ir_app != 0",
     
     
     # Título ------------------------------------------------------------------
@@ -114,7 +168,7 @@ shinyUI(fluidPage(
                  
                  # Mostrar base de datos e información general -----------------------------
                  
-                 tabPanel("",  icon = icon("table"), value = "inicio",
+                 tabPanel("",  icon = icon("home"), value = "inicio",
                           
                           # Se divide la página horizontalmente
                           fluidRow(
@@ -205,7 +259,7 @@ shinyUI(fluidPage(
                                      ),
                                      
                                      wellPanel(
-                                         #uiOutput("parametros_estimados")
+                                         uiOutput("pivote_latex")
                                      )
                                      
                                      
@@ -231,8 +285,7 @@ shinyUI(fluidPage(
                                  ),
                                  
                                  wellPanel(
-                                     #uiOutput("parametros_estimados")
-                                     tableOutput("IC")
+                                     uiOutput("MV_latex")
                                  )
                                  
                           ),
@@ -255,7 +308,7 @@ shinyUI(fluidPage(
                                  ),
                                  
                                  wellPanel(
-                                     uiOutput("parametros_estimados")
+                                     uiOutput("boostrap_latex")
                                  )
                                  
                           )
@@ -266,7 +319,11 @@ shinyUI(fluidPage(
                  
     )
     
+
+    )
     
+    
+    )) # app completa y contenido oculto 
     
     
 ))

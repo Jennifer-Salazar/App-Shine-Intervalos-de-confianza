@@ -1,7 +1,7 @@
 
 # latex pivote media ---------------------------------------------------
 
-latex_pivote_media <- function(conocida, normalidad){
+latex_pivote_media <- function(conocida, normalidad, n){
   
 
   if(normalidad & !conocida){
@@ -34,7 +34,7 @@ latex_pivote_media <- function(conocida, normalidad){
 
 latex_boostrap_media <- function(num_replicas){
   
-  texto <- paste("$$\\texto{El número de replicas son: }", num_replicas, "$$")
+  texto <- paste("$$\\text{El número de replicas son: }", as.character(num_replicas),"$$")
   
   return(texto)
   
@@ -46,7 +46,7 @@ latex_boostrap_media <- function(num_replicas){
 
 latex_mv_media <- function(conocida){
   
-  texto <- paste("$$\\text{Verosimilitud relativa:   } R(\\theta) = \\frac{L(\\theta)}{L(\\hat{\\theta})} \\\\ \\text{El conjunto de valores } \\theta \\text{ para los cuales } R(\\theta) \\geq p \\\\ \\text{Es llamada el intervalo de verosimilitud}  
+  texto <- paste("$$\\text{Verosimilitud relativa:   } R(\\theta) = \\frac{L(\\theta)}{L(\\hat{\\theta})} \\\\ \\text{El conjunto de valores } \\theta \\text{ para los cuales } R(\\theta) \\geq p \\\\ \\text{es llamado el intervalo de verosimilitud}  
 \\\\ \\text{Los limites del intervalo se obtienen al resolver la ecuación:} 
 \\\\ R(\\theta) = p 
 \\\\ r(\\theta) = Ln(R(\\theta)) = Ln(p)
@@ -66,7 +66,7 @@ R(\\mu) = e^{\\frac{n}{2} Ln\\left(\\frac{\\hat{\\sigma}^2}{\\hat{\\sigma}^2+(\\
   }
   
   
-  return(texto, texto2)
+  return(list(texto, texto2))
 }
 
 
@@ -90,7 +90,7 @@ latex_pivote_varianza <- function(conocida){
 
 latex_boostrap_varianza <- function(num_replicas){
   
-  texto <- paste("$$\\texto{El número de replicas son: }", num_replicas, "$$")
+  texto <- paste("$$\\text{El número de replicas son: }", as.character(num_replicas), "$$")
   
   return(texto)
   
@@ -103,7 +103,7 @@ latex_boostrap_varianza <- function(num_replicas){
 latex_mv_varianza <- function(conocida){
   
   
-  texto <- paste("$$\\text{Verosimilitud relativa:   } R(\\theta) = \\frac{L(\\theta)}{L(\\hat{\\theta})} \\\\ \\text{El conjunto de valores } \\theta \\text{ para los cuales } R(\\theta) \\geq p \\\\ \\text{Es llamada el intervalo de verosimilitud}  
+  texto <- paste("$$\\text{Verosimilitud relativa:   } R(\\theta) = \\frac{L(\\theta)}{L(\\hat{\\theta})} \\\\ \\text{El conjunto de valores } \\theta \\text{ para los cuales } R(\\theta) \\geq p \\\\ \\text{es llamado el intervalo de verosimilitud}  
 \\\\ \\text{Los limites del intervalo se obtienen al resolver la ecuación:} 
 \\\\ R(\\theta) = p 
 \\\\ r(\\theta) = Ln(R(\\theta)) = Ln(p)
@@ -123,7 +123,7 @@ latex_mv_varianza <- function(conocida){
   }
   
   
-  return(texto, texto2)
+  return(list(texto, texto2))
   
  
   
