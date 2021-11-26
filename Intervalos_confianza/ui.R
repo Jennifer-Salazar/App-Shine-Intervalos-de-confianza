@@ -9,11 +9,19 @@ library(shinycssloaders)
 # UI ----------------------------------------------------------------------
 
 shinyUI(fluidPage(
-    
+    # shinyjs
     useShinyjs(),
+    
+    # CSS
     tags$head(
         tags$link(rel = "stylesheet", type = "text/css", href = "style.css")
     ),
+    
+
+    # Panel para cargar una base de datos -------------------------------------
+
+    
+    
     
     # Título ------------------------------------------------------------------
     

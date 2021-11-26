@@ -347,18 +347,24 @@ shinyServer(function(input, output, session) {
         
         output$graf_pivote <- renderPlot({
             
+            input$calcular_ic
+            Sys.sleep(1.5)
             pivote[[2]]
             
         })
         
         output$graf_MV <- renderPlot({
             
+            input$calcular_ic
+            Sys.sleep(1.5)
             mv[[2]]
             
         })
         
         output$graf_boostrap <- renderPlot({
             
+            input$calcular_ic
+            Sys.sleep(1.5)
             boostrap[[2]]
             
         })
