@@ -4,92 +4,101 @@ options(encoding = 'UTF-8')
 library(shiny)
 library(shinyjs)
 library(rpivotTable)
+library(shinycssloaders)
 
 # UI ----------------------------------------------------------------------
 
 shinyUI(fluidPage(
     
     useShinyjs(),
+    tags$head(
+        tags$link(rel = "stylesheet", type = "text/css", href = "style.css")
+    ),
     
     # Título ------------------------------------------------------------------
     
-    tags$div(class="jumbotron",
+    tags$div(id="jumbotron",
              
-             h2(strong("Aplicación de"), align= "center",
-                style="color: black;font-family: cursive"),
-             
-             h2(strong("Intervalos de Confianza"), align= "center",
-                style="color: black;font-family: cursive"),
+             tags$div(
+                 
+                 h2(strong("Aplicación de"), align= "center",
+                    style="color: black;font-family: cursive"),
+                 
+                 h2(strong("Intervalos de Confianza"), align= "center",
+                    style="color: black;font-family: cursive"),
+             )
     ),
 
-
-    hr(),
+    tags$div(id = "seleccion",
     
-                    
-    fluidRow(
-        
-
-        # Selección del parámetro para el cual se desea el IC ---------------------
-        
-        column(width = 3, offset = 1,
-               
-               
-               h4("Parámetro a estimar:"),
-               
-               selectInput(inputId = "parametro",
-                           label = "",  
-                           choice = c(
-                               "",
-                               "\u03BC",   # media
-                               "\u03C3²"   # varianza
-                           )  
-               ),
-        ),
-        
-        
-        # Selección de la variable de interes -------------------------------------
-        
-        column(width = 3, offset = 0,
-               
-               uiOutput(outputId = "preguntar_variable")
-        ),
-        
-
-        # El párametro restante es conocido o desconocido -------------------------
-        
-        column(width = 2, offset = 0,
-
-               uiOutput(outputId = "preguntar_parametro2"),
-               
-               uiOutput(outputId = "preguntar_conocido")
-        ),
-        
-        # Botón para prueba de normalidad -----------------------------------------
-        
-        conditionalPanel(
-            condition = "input.parametro != '' && input.nombre_variable != ''",
-            
-            column(width = 3, offset = 0,
-                   
-                   h4("Ingrese el nivel de confianza (%): "),
-                   
-                   sliderInput(inputId = "nivel_de_confianza", label = "", 
-                               value = 95, min = 90, max = 99),
-                   
-                   actionButton("Normalidad", "Verificar normalidad"),
-                   
-                   actionButton(inputId = "calcular_ic", label = "calcular IC", icon = icon("calculator"))
-                   
-            ),
-            
-            
-            
-        ),
-
+             hr(),
+             
+             
+             fluidRow(
+                 
+                 
+                 # Selección del parámetro para el cual se desea el IC ---------------------
+                 
+                 column(width = 3, offset = 1,
+                        
+                        
+                        h4("Parámetro a estimar:"),
+                        
+                        selectInput(inputId = "parametro",
+                                    label = "",  
+                                    choice = c(
+                                        "",
+                                        "\u03BC",   # media
+                                        "\u03C3²"   # varianza
+                                    )  
+                        ),
+                 ),
+                 
+                 
+                 # Selección de la variable de interes -------------------------------------
+                 
+                 column(width = 3, offset = 0,
+                        
+                        uiOutput(outputId = "preguntar_variable")
+                 ),
+                 
+                 
+                 # El párametro restante es conocido o desconocido -------------------------
+                 
+                 column(width = 2, offset = 0,
+                        
+                        uiOutput(outputId = "preguntar_parametro2"),
+                        
+                        uiOutput(outputId = "preguntar_conocido")
+                 ),
+                 
+                 # Botón para prueba de normalidad -----------------------------------------
+                 
+                 conditionalPanel(
+                     condition = "input.parametro != '' && input.nombre_variable != ''",
+                     
+                     column(width = 3, offset = 0,
+                            
+                            h4("Ingrese el nivel de confianza (%): "),
+                            
+                            sliderInput(inputId = "nivel_de_confianza", label = "", 
+                                        value = 95, min = 90, max = 99),
+                            
+                            actionButton("Normalidad", "Verificar normalidad"),
+                            
+                            actionButton(inputId = "calcular_ic", label = "calcular IC", icon = icon("calculator"))
+                            
+                     ),
+                     
+                     
+                     
+                 ),
+                 
+             ),
+             
+             hr(),
+    
     ),
-    
-    hr(),
-    
     
     # Panel lateral -----------------------------------------------------------    
     
@@ -177,9 +186,12 @@ shinyUI(fluidPage(
                                  verticalLayout(
                                      
                                      wellPanel(
-                                         
-                                         plotOutput(outputId = "graf_pivote")
-                                         
+                                         withSpinner(
+                                             plotOutput(outputId = "graf_pivote"),
+                                             type = 6, 
+                                             color = "#FF000080", 
+                                             size = 1
+                                         )
                                      ),
                                      
                                      wellPanel(
@@ -199,8 +211,12 @@ shinyUI(fluidPage(
                           column(width = 4,
                                  
                                  wellPanel(
-                                     
-                                     plotOutput(outputId = "graf_MV")
+                                     withSpinner(
+                                        plotOutput(outputId = "graf_MV"),
+                                        type = 6, 
+                                        color = "#FF000080", 
+                                        size = 1
+                                     )
                                      
                                  ),
                                  
@@ -218,8 +234,12 @@ shinyUI(fluidPage(
                           column(width = 4,
                                  
                                  wellPanel(
-                                     
-                                     plotOutput(outputId = "graf_boostrap")
+                                     withSpinner(
+                                         plotOutput(outputId = "graf_boostrap"),
+                                         type = 6, 
+                                         color = "#FF000080", 
+                                         size = 1
+                                     )
                                      
                                  ),
                                  

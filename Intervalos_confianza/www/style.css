@@ -1,0 +1,32 @@
+#jumbotron{
+    background: linear-gradient(to right, #034b72, #8ecfeb, #034b72);
+    height: 180px;
+    border-radius: 20px;
+    margin-bottom: -10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#Tabset {
+    position: absolute;
+    top: 136px;
+    margin-left: 30px;
+}
+
+#Tabset>li.active>a,
+#Tabset>li.active>a:focus {
+  /* border-top: 4px solid rgb(134, 197, 255); */
+  border-top: 4px solid rgb(182, 189, 189);
+}
+
+#Tabset>li>a {
+    background-color: #ffffff;
+    color: rgb(56, 56, 56);
+}
+
+#seleccion{
+    background: #e5f0f18d;
+    border-radius: 10px;
+}
+
