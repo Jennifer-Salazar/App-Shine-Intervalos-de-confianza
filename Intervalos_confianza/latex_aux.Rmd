@@ -1,0 +1,67 @@
+---
+title: "Ensayo"
+author: "Jennifer Salazar"
+date: "26/11/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+$$\text{Verosimilitud relativa:   } R(\theta) = \frac{L(\theta)}{L(\hat{\theta})} \\ \text{El conjunto de valores } \theta \text{ para los cuales } R(\theta) \geq p \\ \text{Es llamada el intervalo de verosimilitud}  
+\\ \text{Los limites del intervalo se obtienen al resolver la ecuación:} 
+\\ R(\theta) = p 
+\\ r(\theta) = Ln(R(\theta)) = Ln(p)
+\\ r(\theta) - Ln(p)=0
+\\ \text{donde p esta definido como:  } p = e^{\frac{-\chi^2_{1-\alpha,1}}{2}}$$
+
+
+
+```{r}
+texto <- paste("$$\\text{Verosimilitud relativa:   } R(\\theta) = \\frac{L(\\theta)}{L(\\hat{\\theta})} \\\\ \\text{El conjunto de valores } \\theta \\text{ para los cuales } R(\\theta) \\geq p \\\\ \\text{Es llamada el intervalo de verosimilitud}  
+\\\\ \\text{Los limites del intervalo se obtienen al resolver la ecuación:} 
+\\\\ R(\\theta) = p 
+\\\\ r(\\theta) = Ln(R(\\theta)) = Ln(p)
+\\\\ r(\\theta) - Ln(p)=0
+\\\\ \\text{donde p esta definido como:  } p = e^{\\frac{-\\chi^2_{1-\\alpha,1}}{2}}$$")
+
+
+withMathJax(texto)
+```
+
+
+# Conocida
+
+$$r(\mu)= \frac{-n}{2 \sigma^2} (\mu - \overline{x})^2 \\
+ R(\mu) = e^{\frac{-n}{2 \sigma^2} (\mu - \overline{x})^2}$$
+
+
+# Desconocida
+
+$$r(\mu)= \frac{n}{2} Ln\left(\frac{\hat{\sigma}^2}{\hat{\sigma}^2+(\overline{x}-\mu)^2}\right) \\
+R(\mu) = e^{\frac{n}{2} Ln\left(\frac{\hat{\sigma}^2}{\hat{\sigma}^2+(\overline{x}-\mu)^2}\right)}$$
+
+# Conocida
+
+
+$$\left( \frac{\sum_{i=1}^{n}(x_i-\mu)^2}{\chi^2_{1-\frac{\alpha}{2}(n)}}, \frac{\sum_{i=1}^{n}(x_i-\mu)^2}{\chi^2_{\frac{\alpha}{2}(n)}}\right)$$
+
+
+# desconocida
+
+
+$$\left( \frac{\sum_{i=1}^{n}(x_i-\overline{x})^2}{\chi^2_{1-\frac{\alpha}{2}(n-1)}}, \frac{\sum_{i=1}^{n}(x_i-\overline{x})^2}{\chi^2_{\frac{\alpha}{2}(n-1)}}\right)$$
+
+  
+# Conocida
+
+$$r(\sigma^2)=\frac{n}{2} \left[ Ln \left( \frac{\hat{\sigma}^2}{\sigma^2}\right) + S_{\mu}^2 \left(\frac{1}{\hat{\sigma}^2}- \frac{1}{\sigma^2}\right)\right] \\
+R(\sigma^2) = e^{\frac{n}{2} \left[ Ln \left( \frac{\hat{\sigma}^2}{\sigma^2}\right) + S_{\mu}^2 \left(\frac{1}{\hat{\sigma}^2}- \frac{1}{\sigma^2}\right)\right]}$$
+
+
+# desconocida
+
+
+$$r(\sigma^2)=\frac{n}{2} \left[ Ln \left( \frac{\hat{\sigma}^2}{\sigma^2}\right)-\frac{\hat{\sigma}^2}{\sigma^2} +1\right] \\ R(\sigma^2)=e^{\frac{n}{2} \left[ Ln \left( \frac{\hat{\sigma}^2}{\sigma^2}\right)-\frac{\hat{\sigma}^2}{\sigma^2} +1\right]}$$
