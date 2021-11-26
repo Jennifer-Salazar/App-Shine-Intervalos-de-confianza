@@ -4,6 +4,7 @@ library(shiny)
 library(shinyjs)
 library(rpivotTable)
 
+
 # Se cargan los datos
 data <- read.csv("www/Ejercicio6.txt", header = TRUE, encoding = "UTF-8")
 
@@ -156,9 +157,27 @@ shinyServer(function(input, output, session) {
         variable <- data[,nom_variable]
         
         output$qqplot <- renderPlot({
-            qqnorm(variable, pch=19)
-            qqline(variable)
-            grid()
+            
+            suppressPackageStartupMessages(library(car))
+            
+            shapiro <- shapiro.test(variable)
+            shapvalue <- ifelse(shapiro$p.value < 0.001, "P value < 0.001", paste("P value = ", round(shapiro$p.value, 4), sep = ""))
+            shapstat <- paste("W = ", round(shapiro$statistic, 4), sep = "")
+            q <- qqnorm(variable, plot.it = FALSE)
+            qqPlot(variable, main = paste("Normal Q-Q Plot de", nom_variable), pch=19, col.lines = "cyan4", 
+                   xlab="Theoretical Quantiles", ylab="Sample Quantiles")
+            # qqnorm(variable, main = lab.plot, pch=19)
+            # qqline(variable, lty = 2, col = 2)
+            # grid()
+            text(min(q$x, na.rm = TRUE), max(q$y, na.rm = TRUE)*0.95, pos = 4, 'Shapiro-Wilk Test', col = "deepskyblue4", font = 2)
+            text(min(q$x, na.rm = TRUE), max(q$y, na.rm = TRUE)*0.90, pos = 4, shapstat, col = "deepskyblue4", font = 3)
+            text(min(q$x, na.rm = TRUE), max(q$y, na.rm = TRUE)*0.85, pos = 4, shapvalue, col = "midnightblue", font = 3)
+            
+            
+            
+            # qqnorm(variable, pch=19)
+            # qqline(variable)
+            # grid()
             
         })
         
@@ -169,11 +188,6 @@ shinyServer(function(input, output, session) {
 
         })
         
-        
-        output$Shapiro <- renderPrint({
-            shapiro.test(variable)
-
-        })
     })
     
     
@@ -310,6 +324,11 @@ shinyServer(function(input, output, session) {
             intervalos
             
         }, include.rownames=TRUE)
+        
+        output$IC_pivote <- renderText({
+            withMathJax(paste("$$(", round(ic_pivote[1],4), ",", round(ic_pivote[2],4), ")$$", sep=""))
+            
+        })
         
 
         # Gráficar intervalos de confianza ----------------------------------------

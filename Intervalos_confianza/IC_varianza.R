@@ -58,7 +58,7 @@ ic_boostrap_varianza <- function(variable, alpha){
   }
   
   
-  replicas <- boot(data = variable, statistic = varianza, R = 5000)
+  replicas <- boot(data = variable, statistic = varianza, R = 100000)
   
   ic_boostrap <-  boot.ci(replicas, conf = 1 - alpha, type = "bca")$bca[4:5]
   
