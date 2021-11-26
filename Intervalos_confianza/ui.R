@@ -193,7 +193,7 @@ shinyUI(fluidPage(
                                      ),
                                      
                                      wellPanel(
-                                         textOutput("IC_pivote")
+                                         uiOutput("IC_pivote")
                                      ),
                                      
                                      wellPanel(
@@ -219,11 +219,12 @@ shinyUI(fluidPage(
                                  ),
                                  
                                  wellPanel(
-                                     tableOutput("IC")
+                                     uiOutput("IC_MV")
                                  ),
                                  
                                  wellPanel(
                                      #uiOutput("parametros_estimados")
+                                     tableOutput("IC")
                                  )
                                  
                           ),
@@ -242,7 +243,7 @@ shinyUI(fluidPage(
                                  ),
                                  
                                  wellPanel(
-                                     textOutput("IC_boostrap")
+                                     uiOutput("IC_boostrap")
                                  ),
                                  
                                  wellPanel(

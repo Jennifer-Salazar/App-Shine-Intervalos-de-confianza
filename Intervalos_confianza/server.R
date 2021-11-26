@@ -325,8 +325,19 @@ shinyServer(function(input, output, session) {
             
         }, include.rownames=TRUE)
         
-        output$IC_pivote <- renderText({
-            withMathJax(paste("$$\\(", round(ic_pivote[1],4), ",", round(ic_pivote[2],4), "\\)$$", sep=""))
+        output$IC_pivote <- renderUI({
+            h4(withMathJax(paste("$$(", round(ic_pivote[1],4), ",", round(ic_pivote[2],4), ")$$", sep="")))
+            
+        })
+        
+        
+        output$IC_boostrap <- renderUI({
+            h4(withMathJax(paste("$$(", round(ic_boostrap[1],4), ",", round(ic_boostrap[2],4), ")$$", sep="")))
+            
+        })
+        
+        output$IC_MV <- renderUI({
+            h4(withMathJax(paste("$$(", round(ic_mv[1],4), ",", round(ic_mv[2],4), ")$$", sep="")))
             
         })
         
