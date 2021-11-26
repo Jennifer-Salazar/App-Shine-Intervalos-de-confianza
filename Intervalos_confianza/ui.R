@@ -169,9 +169,7 @@ shinyUI(fluidPage(
                                   column(width = 6,
                                          plotOutput("histograma")
                                   )
-                              ),
-                              
-                              verbatimTextOutput("Shapiro")   
+                              )   
                           )      
                  ),
                  
@@ -195,7 +193,7 @@ shinyUI(fluidPage(
                                      ),
                                      
                                      wellPanel(
-                                         tableOutput("IC_pivote")
+                                         textOutput("IC_pivote")
                                      ),
                                      
                                      wellPanel(
@@ -244,7 +242,7 @@ shinyUI(fluidPage(
                                  ),
                                  
                                  wellPanel(
-                                     tableOutput("IC_boostrap")
+                                     textOutput("IC_boostrap")
                                  ),
                                  
                                  wellPanel(

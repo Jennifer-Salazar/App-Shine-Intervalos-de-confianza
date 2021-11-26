@@ -64,7 +64,7 @@ ic_boostrap_media <- function(variable, alpha){
   }
   
   
-  replicas <- boot(data = variable, statistic = media, R = 5000)
+  replicas <- boot(data = variable, statistic = media, R = 100000)
   
   ic_boostrap <-  boot.ci(replicas, conf = 1 - alpha, type = "bca")$bca[4:5]
   
@@ -123,7 +123,7 @@ ic_mv_media <- function(x_barra, desv, n, alpha, conocida){
   
   # Obtener gráfica ---------------------------------------------------------
   
-  grafica <- graf_mv_media(x_barra, desv, n, conocida, mv_li, mv_ls)
+  grafica <- graf_mv_media(x_barra, desv, n, conocida, mv_li, mv_ls, p, alpha)
   
   return(list(intervalo, grafica))
 }
