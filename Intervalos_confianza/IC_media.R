@@ -123,7 +123,7 @@ ic_mv_media <- function(x_barra, desv, n, alpha, conocida){
   
   # Obtener gráfica ---------------------------------------------------------
   
-  grafica <- graf_mv_media(x_barra, desv, n, conocida, mv_li, mv_ls)
+  grafica <- graf_mv_media(x_barra, desv, n, conocida, mv_li, mv_ls, p, alpha)
   
   return(list(intervalo, grafica))
 }

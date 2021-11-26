@@ -71,7 +71,7 @@ graf_boostrap_varianza <- function(replicas, s2, li, ls){
 # Gráficos MV varianza conocida -------------------------------------------
 
 
-graf_mv_varianza_conocida <- function(s2_x_barra, s2_mu, n, li, ls){
+graf_mv_varianza_conocida <- function(s2_x_barra, s2_mu, n, li, ls, p, alpha){
   
   # Función de verosimilitud relativa
   
@@ -97,6 +97,8 @@ graf_mv_varianza_conocida <- function(s2_x_barra, s2_mu, n, li, ls){
   plot(eje_x, eje_y, ylab="", xlab="", type="l", lwd=2, bty = "n", xlim = c(0, ls + (ls-li)/4))
   polygon(x_ic, y_ic, col = rgb(1, 0, 0, alpha = 0.5))
   abline(v=s2_mu, lty=3)
+  abline(h = p, lty=3)
+  text(li-sqrt(s2_mu)/2,p+0.05, labels = paste((1-alpha)*100, "%", sep=""))
   #axis(1, at = round(c(li, s2_mu, ls), 3))
   title(main = "Método de Máxima Verosimilitud")
   abline(h = 0)
@@ -110,7 +112,7 @@ graf_mv_varianza_conocida <- function(s2_x_barra, s2_mu, n, li, ls){
 
 # Gráficos MV varianza desconocida ----------------------------------------
 
-graf_mv_varianza_desconocida <- function(s2, n, li, ls){
+graf_mv_varianza_desconocida <- function(s2, n, li, ls, p, alpha){
   
   var_estimada <- (n-1)/n * s2
   
@@ -138,6 +140,8 @@ graf_mv_varianza_desconocida <- function(s2, n, li, ls){
   plot(eje_x, eje_y, ylab="", xlab="", type="l", lwd=2, bty = "n", xlim = c(0, ls + (ls-li)/4))
   polygon(x_ic, y_ic, col = rgb(1, 0, 0, alpha = 0.5))
   abline(v=s2, lty=3)
+  abline(h = p, lty=3)
+  text(li-sqrt(s2)/2,p+0.05, labels = paste((1-alpha)*100, "%", sep=""))
   #axis(1, at = round(c(li, s2, ls), 3))
   title(main = "Método de Máxima Verosimilitud")
   abline(h = 0)

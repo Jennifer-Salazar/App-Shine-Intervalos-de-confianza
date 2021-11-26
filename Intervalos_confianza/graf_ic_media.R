@@ -127,7 +127,7 @@ graf_boostrap_media <- function(replicas, x_barra, li, ls){
 # Gráfico MV media --------------------------------------------------------
 
 
-graf_mv_media <- function(x_barra, desv, n, conocida, li, ls){
+graf_mv_media <- function(x_barra, desv, n, conocida, li, ls, p, alpha){
   
   # Cuando la varianza es conocida
   
@@ -164,6 +164,8 @@ graf_mv_media <- function(x_barra, desv, n, conocida, li, ls){
   plot(eje_x, eje_y, ylab="", xlab="", type="l", lwd=2, bty = "n", xlim= c(x_barra-2*desv, x_barra+2*desv))
   polygon(x_ic, y_ic, col = rgb(1, 0, 0, alpha = 0.5))
   abline(v=x_barra, lty=3)
+  abline(h = p, lty=3)
+  text(li-desv,p+0.05, labels = paste((1-alpha)*100, "%", sep=""))
   #axis(1, at = round(c(li, x_barra, ls), 3))
   title(main = "Método de Máxima Verosimilitud")
   abline(h = 0)

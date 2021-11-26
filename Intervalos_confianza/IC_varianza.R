@@ -99,7 +99,7 @@ ic_mv_varianza_conocida <- function(s2_x_barra, s2_mu, n, alpha){
   
   # Obtener gráfica ---------------------------------------------------------
   
-  grafica <- graf_mv_varianza_conocida(s2_x_barra, s2_mu, n, mv_li, mv_ls)
+  grafica <- graf_mv_varianza_conocida(s2_x_barra, s2_mu, n, mv_li, mv_ls, p, alpha)
   
   return(list(intervalo, grafica))
 }
@@ -128,7 +128,7 @@ ic_mv_varianza_desconocida <- function(s2, mu, n, alpha){
   
   # Calculo del intervalo ---------------------------------------------------
   
-  grafica <- graf_mv_varianza_desconocida(s2, n, mv_li, mv_ls)
+  grafica <- graf_mv_varianza_desconocida(s2, n, mv_li, mv_ls, p, alpha)
   
   return(list(intervalo, grafica))
   
