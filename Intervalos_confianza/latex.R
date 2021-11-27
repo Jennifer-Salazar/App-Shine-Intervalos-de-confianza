@@ -34,7 +34,7 @@ latex_pivote_media <- function(conocida, normalidad, n){
 
 latex_boostrap_media <- function(num_replicas){
   
-  texto <- paste("$$\\text{El número de replicas son: }", as.character(num_replicas),"$$")
+  texto <- paste("$$\\text{El número de replicas son: }", "100.000","$$")
   
   return(texto)
   
@@ -90,7 +90,7 @@ latex_pivote_varianza <- function(conocida){
 
 latex_boostrap_varianza <- function(num_replicas){
   
-  texto <- paste("$$\\text{El número de replicas son: }", as.character(num_replicas), "$$")
+  texto <- paste("$$\\text{El número de replicas son: }", "100.000", "$$")
   
   return(texto)
   

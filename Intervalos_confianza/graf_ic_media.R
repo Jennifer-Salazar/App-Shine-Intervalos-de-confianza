@@ -21,13 +21,13 @@ graf_pivote_media <- function(x_barra, desv, li, ls, n, conocida, normalidad){
     y_ic <- c(0, eje_y[eje_x >= li & eje_x <= ls], 0) 
     
     # Gráfico
-    plot(eje_x, eje_y, ylab="", xlab="", type="l", lwd=2, bty = "n")
+    plot(eje_x, eje_y, ylab="", xlab="", type="l", lwd=2, bty = "n", xaxt = "n")
     polygon(x_ic, y_ic, col = rgb(1, 0, 0, alpha = 0.5))
-    abline(v=x_barra, lty=3)
-    #axis(1, at = round(c(li, x_barra, ls), 3), las =2)
+    axis(1, at = round(c(li, x_barra, ls), 3), las =2)
     title(main = "Método de Pivote")
-    abline(h = 0)
     grid()
+    abline(v=x_barra, lty=3)
+    abline(h = 0)
     
     
     grafico <- recordPlot()
@@ -60,13 +60,13 @@ graf_pivote_media <- function(x_barra, desv, li, ls, n, conocida, normalidad){
     y_ic <- c(0, eje_y[eje_x >= li & eje_x <= ls], 0) 
     
     # Gráfico
-    plot(eje_x, eje_y, ylab="", xlab="", type="l", lwd=2, bty = "n")
+    plot(eje_x, eje_y, ylab="", xlab="", type="l", lwd=2, bty = "n", xaxt = "n")
     polygon(x_ic, y_ic, col = rgb(1, 0, 0, alpha = 0.5))
-    abline(v=x_barra, lty=3)
-    #axis(1, at = round(c(li, x_barra, ls), 3), las =2)
+    axis(1, at = round(c(li, x_barra, ls), 3), las =2)
     title(main = "Método de Pivote")
-    abline(h = 0)
     grid()
+    abline(v=x_barra, lty=3)
+    abline(h = 0)
     
     # # valores minimos y máximos para el gráfico de la normal
     # x_min <- qnorm(0.0001, mean = x_barra, sd = desv)
@@ -109,13 +109,13 @@ graf_boostrap_media <- function(replicas, x_barra, li, ls){
   x_ic <- c(li, eje_x[eje_x >= li & eje_x <= ls], ls)
   y_ic <- c(0, eje_y[eje_x >= li & eje_x <= ls], 0) 
   
-  plot(eje_x, eje_y, ylab="", xlab="", type="l", lwd=2, bty = "n")
+  plot(eje_x, eje_y, ylab="", xlab="", type="l", lwd=2, bty = "n",  xaxt = "n")
   polygon(x_ic, y_ic, col = rgb(1, 0, 0, alpha = 0.5))
-  abline(v=x_barra, lty=3)
-  #axis(1, at = round(c(li, x_barra, ls), 3))
+  axis(1, at = round(c(li, x_barra, ls), 3), las = 2)
   title(main = "Método de Bootstrap")
-  abline(h = 0)
   grid()
+  abline(v=x_barra, lty=3)
+  abline(h = 0)
   
   grafico <- recordPlot()
   
@@ -161,15 +161,15 @@ graf_mv_media <- function(x_barra, desv, n, conocida, li, ls, p, alpha){
   x_ic <- c(li, seq(li, ls, by=(ls-li)/1000), ls)
   y_ic <- c(0, R_mu(seq(li, ls, by=(ls-li)/1000)), 0) 
   
-  plot(eje_x, eje_y, ylab="", xlab="", type="l", lwd=2, bty = "n", xlim= c(x_barra-2*desv, x_barra+2*desv))
+  plot(eje_x, eje_y, ylab="", xlab="", type="l", lwd=2, bty = "n",  xaxt = "n", xlim= c(x_barra-2*desv, x_barra+2*desv))
   polygon(x_ic, y_ic, col = rgb(1, 0, 0, alpha = 0.5))
-  abline(v=x_barra, lty=3)
   abline(h = p, lty=3)
   text(li-desv,p+0.05, labels = paste((1-alpha)*100, "%", sep=""))
-  #axis(1, at = round(c(li, x_barra, ls), 3))
+  axis(1, at = round(c(li, x_barra, ls), 3), las = 2)
   title(main = "Método de Máxima Verosimilitud")
-  abline(h = 0)
   grid()
+  abline(v=x_barra, lty=3)
+  abline(h = 0)
   
   grafico <- recordPlot()
   
