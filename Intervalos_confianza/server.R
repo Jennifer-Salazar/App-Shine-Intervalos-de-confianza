@@ -389,7 +389,14 @@ shinyServer(function(input, output, session) {
         # }, include.rownames=TRUE)
         
         output$IC_pivote <- renderUI({
+          
+          if (is.numeric(ic_pivote)){
+            
             h4(withMathJax(paste("$$(", round(ic_pivote[1],4), ",", round(ic_pivote[2],4), ")$$", sep="")))
+            
+          }else{
+            h4(paste(ic_pivote[1], ", ", ic_pivote[2], sep=""))
+          }
             
         })
         
@@ -412,7 +419,7 @@ shinyServer(function(input, output, session) {
             
             input$calcular_ic
             Sys.sleep(1.5)
-            pivote[[2]]
+            pivote[[2]]()
             
         })
         
@@ -420,7 +427,7 @@ shinyServer(function(input, output, session) {
             
             input$calcular_ic
             Sys.sleep(1.5)
-            mv[[2]]
+            mv[[2]]()
             
         })
         
@@ -428,7 +435,7 @@ shinyServer(function(input, output, session) {
             
             input$calcular_ic
             Sys.sleep(1.5)
-            boostrap[[2]]
+            boostrap[[2]]()
             
         })
         

@@ -1,0 +1,14 @@
+name: IntervalosConfianza
+title: IntervalosConfianza
+username:
+account: mlondono
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 6346907
+bundleId: 5930961
+url: https://mlondono.shinyapps.io/IntervalosConfianza/
+when: 1653170357.99936
+lastSyncTime: 1653170357.99936
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: Ejercicio6.txt|latex_aux.Rmd

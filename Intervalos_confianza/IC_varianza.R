@@ -27,7 +27,10 @@ ic_pivote_varianza <- function(s2, n, alpha, conocida, normalidad){
      
   }else{
     
-    intervalo <- "No se puede calcular, no se cumple el supuesto de normalidad"
+    pivote_li <- NULL
+    pivote_ls <- NULL
+    
+    intervalo <- c("No se puede calcular", "no se cumple el supuesto de normalidad")
     
   }
   

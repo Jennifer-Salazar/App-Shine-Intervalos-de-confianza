@@ -4,36 +4,52 @@
 
 graf_pivote_varianza <- function(s2, n, conocida, alpha, li, ls){
   
-  
-  if(conocida){
-    grados_libertad <- n
+  if(is.null(li)){
+    
+    grafico <- function(){
+      plot.new()
+    }
+    
+    # grafico <- recordPlot()
+    
   }else{
-    grados_libertad <- n-1
+    
+  
+    if(conocida){
+      grados_libertad <- n
+    }else{
+      grados_libertad <- n-1
+    }
+    
+    chi2 <- rchisq(100000, grados_libertad)
+    distribucion <- (grados_libertad*s2)/chi2
+    
+    # valores minimos y máximos para el gráfico de la normal
+    
+    # Se obtiene el eje x y el eje y
+    eje_x <- density(distribucion)$x
+    eje_y <- density(distribucion)$y
+    
+    # Se crean los puntos para pintar el área del intervalo
+    x_ic <- c(li, eje_x[eje_x >= li & eje_x <= ls], ls)
+    y_ic <- c(0, eje_y[eje_x >= li & eje_x <= ls], 0) 
+    
+    # Gráfico
+    grafico <- function(){
+    
+      plot(eje_x, eje_y, ylab="", xlab="", type="l", lwd=2, bty = "n",  xaxt = "n",  xlim = c(0, ls + (ls-li)/4))
+      polygon(x_ic, y_ic, col = rgb(1, 0, 0, alpha = 0.5))
+      axis(1, at = round(c(li, s2, ls), 3), las =2)
+      title(main = "Método de Pivote")
+      grid()
+      abline(v=s2, lty=3)
+      abline(h = 0)
+      
+    }
+    
+    # grafico <- recordPlot()
+  
   }
-  
-  chi2 <- rchisq(100000, grados_libertad)
-  distribucion <- (grados_libertad*s2)/chi2
-  
-  # valores minimos y máximos para el gráfico de la normal
-  
-  # Se obtiene el eje x y el eje y
-  eje_x <- density(distribucion)$x
-  eje_y <- density(distribucion)$y
-  
-  # Se crean los puntos para pintar el área del intervalo
-  x_ic <- c(li, eje_x[eje_x >= li & eje_x <= ls], ls)
-  y_ic <- c(0, eje_y[eje_x >= li & eje_x <= ls], 0) 
-  
-  # Gráfico
-  plot(eje_x, eje_y, ylab="", xlab="", type="l", lwd=2, bty = "n",  xaxt = "n",  xlim = c(0, ls + (ls-li)/4))
-  polygon(x_ic, y_ic, col = rgb(1, 0, 0, alpha = 0.5))
-  axis(1, at = round(c(li, s2, ls), 3), las =2)
-  title(main = "Método de Pivote")
-  grid()
-  abline(v=s2, lty=3)
-  abline(h = 0)
-  
-  grafico <- recordPlot()
   
   return(grafico)
 }
@@ -53,15 +69,19 @@ graf_boostrap_varianza <- function(replicas, s2, li, ls){
   y_ic <- c(0, eje_y[eje_x >= li & eje_x <= ls], 0) 
   
   # Gráfico
-  plot(eje_x, eje_y, ylab="", xlab="", type="l", lwd=2, bty = "n",  xaxt = "n", xlim = c(0, ls + (ls-li)/4))
-  polygon(x_ic, y_ic, col = rgb(1, 0, 0, alpha = 0.5))
-  axis(1, at = round(c(li, s2, ls), 3), las = 2)
-  title(main = "Método de Bootstrap")
-  grid()
-  abline(v=s2, lty=3)
-  abline(h = 0)
+  grafico <- function(){
   
-  grafico <- recordPlot()
+    plot(eje_x, eje_y, ylab="", xlab="", type="l", lwd=2, bty = "n",  xaxt = "n", xlim = c(0, ls + (ls-li)/4))
+    polygon(x_ic, y_ic, col = rgb(1, 0, 0, alpha = 0.5))
+    axis(1, at = round(c(li, s2, ls), 3), las = 2)
+    title(main = "Método de Bootstrap")
+    grid()
+    abline(v=s2, lty=3)
+    abline(h = 0)
+  
+  }
+  
+  # grafico <- recordPlot()
   
   return(grafico)
   
@@ -94,17 +114,21 @@ graf_mv_varianza_conocida <- function(s2_x_barra, s2_mu, n, li, ls, p, alpha){
   y_ic <- c(0, R_varianza(seq(li, ls, by=(ls-li)/1000)), 0)
 
   # Gráfico
-  plot(eje_x, eje_y, ylab="", xlab="", type="l", lwd=2, bty = "n",  xaxt = "n", xlim = c(0, ls + (ls-li)/4))
-  polygon(x_ic, y_ic, col = rgb(1, 0, 0, alpha = 0.5))
-  text(li-sqrt(s2_mu)/2,p+0.05, labels = paste((1-alpha)*100, "%", sep=""))
-  axis(1, at = round(c(li, s2_mu, ls), 3), las = 2)
-  title(main = "Método de Máxima Verosimilitud")
-  grid()
-  abline(v=s2_mu, lty=3)
-  abline(h = p, lty=3)
-  abline(h = 0)
+  grafico <- function(){
+  
+    plot(eje_x, eje_y, ylab="", xlab="", type="l", lwd=2, bty = "n",  xaxt = "n", xlim = c(0, ls + (ls-li)/4))
+    polygon(x_ic, y_ic, col = rgb(1, 0, 0, alpha = 0.5))
+    text(li-sqrt(s2_mu)/2,p+0.05, labels = paste((1-alpha)*100, "%", sep=""))
+    axis(1, at = round(c(li, s2_mu, ls), 3), las = 2)
+    title(main = "Método de Máxima Verosimilitud")
+    grid()
+    abline(v=s2_mu, lty=3)
+    abline(h = p, lty=3)
+    abline(h = 0)
+    
+  }
 
-  grafico <- recordPlot()
+  # grafico <- recordPlot()
 
   return(grafico)
 }
@@ -137,17 +161,21 @@ graf_mv_varianza_desconocida <- function(s2, n, li, ls, p, alpha){
   y_ic <- c(0, R_varianza(seq(li, ls, by=(ls-li)/1000)), 0)
   
   # Gráfico
-  plot(eje_x, eje_y, ylab="", xlab="", type="l", lwd=2, bty = "n",  xaxt = "n", xlim = c(0, ls + (ls-li)/4))
-  polygon(x_ic, y_ic, col = rgb(1, 0, 0, alpha = 0.5))
-  text(li-sqrt(s2)/2,p+0.05, labels = paste((1-alpha)*100, "%", sep=""))
-  axis(1, at = round(c(li, s2, ls), 3), las = 2)
-  title(main = "Método de Máxima Verosimilitud")
-  grid()
-  abline(v=s2, lty=3)
-  abline(h = p, lty=3)
-  abline(h = 0)
+  grafico <- function(){
   
-  grafico <- recordPlot()
+    plot(eje_x, eje_y, ylab="", xlab="", type="l", lwd=2, bty = "n",  xaxt = "n", xlim = c(0, ls + (ls-li)/4))
+    polygon(x_ic, y_ic, col = rgb(1, 0, 0, alpha = 0.5))
+    text(li-sqrt(s2)/2,p+0.05, labels = paste((1-alpha)*100, "%", sep=""))
+    axis(1, at = round(c(li, s2, ls), 3), las = 2)
+    title(main = "Método de Máxima Verosimilitud")
+    grid()
+    abline(v=s2, lty=3)
+    abline(h = p, lty=3)
+    abline(h = 0)
+    
+  }
+  
+  # grafico <- recordPlot()
   
   return(grafico)
 }

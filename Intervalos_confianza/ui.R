@@ -17,6 +17,14 @@ shinyUI(fluidPage(
         tags$link(rel = "stylesheet", type = "text/css", href = "style.css")
     ),
     
+    # Logo de la app en la web
+    tags$head(
+      tags$link(rel = "icon", type = "image/png", sizes = "32x32", href = "logo.png"),
+    ),
+    
+    # Titulo de la app en la web
+    titlePanel("", windowTitle = "Intervalos de confianza" ),
+    
     # Ventana emergente de cargando... ----------------------------------------
     tags$div(
         id = "loading-content",
@@ -179,7 +187,8 @@ shinyUI(fluidPage(
                               column(width = 9,
                                      
                                      # Mostrar base de datos
-                                     dataTableOutput(outputId = "print_datos"),
+                                     DT::dataTableOutput("print_datos"),
+                                     
                               ),
                               
                               # lado derecho
@@ -323,7 +332,30 @@ shinyUI(fluidPage(
     )
     
     
-    )) # app completa y contenido oculto 
+    )), # app completa y contenido oculto 
     
+    div(id = "footer",
+        column( width = 1,
+                br(),
+                img(src="logo_escuela.jpeg", height = 80, width = 80),
+        ),
+        column( width = 1,
+                br(),
+                img(src="Nacional.png", height = 66, width = 150)
+        ),
+        div(id = "autores", 
+            p(tags$u(strong(em("Autores:")))),
+            column( width = 3,
+                    br(),
+                    p('Miguel Angel Londoño Ciceros'),
+                    p('Carlos Mario Lopera Gomez')
+            ),
+            column( width = 3,
+                    br(),
+                    p('Jennifer Salazar Galvis'),
+                    p('Mario Cesar Jaramillo Elorza'),
+            )
+        )
+    )
     
 ))
